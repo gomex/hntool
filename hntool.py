@@ -19,3 +19,12 @@
 #
 # 
 
+import hntool
+
+# Functions
+# Return all possible modules (rules)
+def get_modules():
+	return hntool.__all__
+	
+for modulos in get_modules():
+	print modulos
