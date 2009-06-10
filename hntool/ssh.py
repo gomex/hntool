@@ -1,5 +1,5 @@
 # 
-# hntool rules - __init__
+# hntool rules - ssh
 # Copyright (C) 2009 Hugo Doria <mail@hugodoria.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
@@ -17,5 +17,16 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-__services__ = ['ssh']
-__all__ = __services__
+import os
+
+class rule:
+	def short_name(self):
+		return "ssh"
+	def long_name(self):
+		return "Checks security problems on sshd config file"
+	def analyze(self):
+		if os.path.isfile('/etc/ssh/sshd_config'):
+			print 'File exists'
+		#return ret
+	def type(self):
+		return "config"

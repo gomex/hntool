@@ -19,12 +19,36 @@
 #
 # 
 
-import hntool
+import hntool, getopt, sys, string
 
 # Functions
 # Return all possible modules (rules)
 def get_modules():
 	return hntool.__all__
+
+# Show the usage help
+def usage():
+	print "Usage: " + sys.argv[0]
+	print "       -l    : returns list of available rules"	
+	sys.exit(2)
+
 	
-for modulos in get_modules():
-	print modulos
+# get our options and process them
+try:
+	optlist, args = getopt.getopt(sys.argv[1:], "lh:", ["list","help"])
+except getopt.GetoptError:
+	usage()
+	
+	
+	
+for i, j in optlist:	
+	# Show all available modules (rules) and its description
+	if i in ('-l','--list'):
+		print "-"*20 + " hntool rule list " + "-"*20
+		for module in get_modules():
+				print string.ljust(module, 20) + ": " + __import__('hntool.' + 
+																   module, globals(), 
+																   locals(), 
+																   [hntool]).rule().long_name()
+		sys.exit(2)
+	
