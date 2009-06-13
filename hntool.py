@@ -40,15 +40,34 @@ except getopt.GetoptError:
 	usage()
 	
 	
-	
-for i, j in optlist:	
+for i, k in optlist:	
 	# Show all available modules (rules) and its description
 	if i in ('-l','--list'):
 		print "-"*20 + " hntool rule list " + "-"*20
-		for module in get_modules():
-				print string.ljust(module, 20) + ": " + __import__('hntool.' + 
-																   module, globals(), 
-																   locals(), 
-																   [hntool]).rule().long_name()
+		
+		for module in get_modules():			
+			print string.ljust(module, 20) + ": " + __import__('hntool.' + 
+															   module, globals(), 
+															   locals(), 
+															   [hntool]).rule().long_name()
+			
+			
 		sys.exit(2)
+			
+			
+for module in get_modules():
+	check_results = [[],[],[]]
+	
+	check_results = __import__('hntool.' + module ,globals(), locals(), [hntool]).rule().analyze()
+	
+	if check_results[0] != []:
+		for j in check_results[0]:
+			print string.ljust(module, 10) + " I: " + j
+	if check_results[1] != []:
+		for j in check_results[1]:
+			print string.ljust(module, 10) + " W: " + j
+	if check_results[2] != []:
+		for j in check_results[2]:
+			print string.ljust(module, 10) + " E: " + j
+
 	

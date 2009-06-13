@@ -17,7 +17,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-import os
+import os, ConfigParser
 
 class rule:
 	def short_name(self):
@@ -25,8 +25,26 @@ class rule:
 	def long_name(self):
 		return "Checks security problems on sshd config file"
 	def analyze(self):
-		if os.path.isfile('/etc/ssh/sshd_config'):
-			print 'File exists'
-		#return ret
+		check_results = [[],[],[]]
+		ssh_conf_file = '/etc/ssh/sshd_config'
+		
+		if os.path.isfile(ssh_conf_file):
+			fp = open(ssh_conf_file,'r')
+			
+			for line in fp:
+				
+				if line.startswith('Port 22') or line.startswith('#Port 22'):					
+					check_results[0].append('SSH is using the default port')
+					
+				if line.startswith('PermitRootLogin yes') or line.startswith('#PermitRootLogin'):					
+					check_results[1].append('Root access allowed!')
+					
+				if line.startswith('Protocol'):					
+					if not line.startswith('Protocol 2'):		
+						check_results[1].append('SSH is not using protocol v2')
+						
+			fp.close()
+					
+		return check_results
 	def type(self):
 		return "config"
