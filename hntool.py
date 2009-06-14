@@ -23,7 +23,7 @@ import hntool, getopt, sys, string
 
 # Functions
 # Return all possible modules (rules)
-def get_modules():
+def get_modules():	
 	return hntool.__all__
 
 # Show the usage help

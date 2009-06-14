@@ -17,5 +17,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
+__files__ = ['authentication']
 __services__ = ['ssh']
-__all__ = __services__
+
+__all__ = __files__ + __services__ 
