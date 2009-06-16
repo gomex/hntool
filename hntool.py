@@ -81,7 +81,7 @@ def msg_medium_status(msg):
 
 def msg_high_status(msg):
 	if use_colors:
-		return colors.colors.ENDC + '[ ' + colors.colors.FAIL + 'HIGH' + colors.colors.ENDC + ' ]   ' + msg		
+		return colors.colors.ENDC + '[ ' + colors.colors.HIGH + 'HIGH' + colors.colors.ENDC + ' ]   ' + msg		
 	else:
 		return '[ HIGH ]  ' + msg
 		

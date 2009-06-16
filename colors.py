@@ -23,12 +23,13 @@ class colors:
     OKGREEN = '\033[1;92m'
     LOW = '\033[1;30m'
     WARNING = '\033[1;93m'
-    FAIL = '\033[1;91m'
+    HIGH = '\033[1;91m'
     ENDC = '\033[0m'
 
     def disable(self):        
         self.OKBLUE = ''
         self.OKGREEN = ''
+        self.LOW = ''
         self.WARNING = ''
-        self.FAIL = ''
+        self.HIGH = ''
         self.ENDC = ''
