@@ -19,7 +19,8 @@
 #
 # 
 
-import hntool, getopt, sys, string
+import hntool, getopt, sys, string, colors
+
 
 # Functions
 # Return all possible modules (rules)
@@ -28,18 +29,21 @@ def get_modules():
 
 # Show the usage help
 def usage():
-	print "Usage: " + sys.argv[0]
-	print "       -l    : returns list of available rules"	
+	print "Usage: " + sys.argv[0] + ' [options]'
+	print "       -h, --help       : print this help"
+	print "       -l, --list       : returns list of available rules"
+	print "       -n, --nocolors   : does not use colors on output"
 	sys.exit(2)
 
-	
+
 # get our options and process them
 try:
-	optlist, args = getopt.getopt(sys.argv[1:], "lh:", ["list","help"])
+	optlist, args = getopt.getopt(sys.argv[1:], "lhn:", ["list","help","nocolors"])
 except getopt.GetoptError:
 	usage()
 	
-	
+use_colors = True
+
 for i, k in optlist:	
 	# Show all available modules (rules) and its description
 	if i in ('-l','--list'):
@@ -53,8 +57,35 @@ for i, k in optlist:
 			
 			
 		sys.exit(2)
+	
+	if i in ('-n', '--nocolors'):
+		use_colors = False
 			
-			
+	
+	if i in ('-h', '--help'):
+		usage()
+
+		
+# Methods to show the check results
+def msg_low_status(msg):
+	if use_colors:
+		return colors.colors.ENDC + '[ ' + colors.colors.LOW + 'LOW' + colors.colors.ENDC + ' ]    ' + msg
+	else:
+		return '[ LOW ]    ' + msg
+
+def msg_medium_status(msg):
+	if use_colors:
+		return colors.colors.ENDC + '[ ' + colors.colors.WARNING + 'MEDIUM' + colors.colors.ENDC + ' ] ' + msg
+	else:
+		return '[ MEDIUM ] ' + msg
+
+def msg_high_status(msg):
+	if use_colors:
+		return colors.colors.ENDC + '[ ' + colors.colors.FAIL + 'HIGH' + colors.colors.ENDC + ' ]   ' + msg		
+	else:
+		return '[ HIGH ]  ' + msg
+		
+
 # Run all the modules and its checks. The results of each module goes to "check_results"
 for module in get_modules():
 	check_results = [[],[],[]] # info, warning and error
@@ -67,12 +98,12 @@ for module in get_modules():
 	# messages.
 	if check_results[0] != []:
 		for j in check_results[0]:
-			print string.ljust(module, 10) + " I: " + j
+			print string.ljust(module, 20) + msg_low_status(j)
 	if check_results[1] != []:
 		for j in check_results[1]:
-			print string.ljust(module, 10) + " W: " + j
+			print string.ljust(module, 20) + msg_medium_status(j) 
 	if check_results[2] != []:
 		for j in check_results[2]:
-			print string.ljust(module, 10) + " E: " + j
+			print string.ljust(module, 20) + msg_high_status(j)
 
-	
+			
