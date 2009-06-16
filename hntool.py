@@ -88,13 +88,13 @@ def msg_high_status(msg):
 
 # Run all the modules and its checks. The results of each module goes to "check_results"
 for module in get_modules():
-	check_results = [[],[],[]] # info, warning and error
+	check_results = [[],[],[]] # low, medium and high
 	
 	check_results = __import__('hntool.' + module ,globals(), locals(), [hntool]).rule().analyze()
 	
-	# Print all the results, from the 3 types of messages (info, warning and error).
-	# First message is the "info" one (check_results[0]). The seconde one is
-	# "warning" (check_results[1]) and the last one shows all "errors" (check_results[2]) 
+	# Print all the results, from the 3 types of messages (low, medium and high).
+	# First message is the "low" one (check_results[0]). The second one is
+	# "medium" (check_results[1]) and the last one shows all "high" (check_results[2]) 
 	# messages.
 	if check_results[0] != []:
 		for j in check_results[0]:
