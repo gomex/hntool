@@ -43,6 +43,15 @@ class rule:
 					if not line.startswith('Protocol 2'):		
 						check_results[1].append('SSH is not using protocol v2')
 						
+				if line.startswith('PermitEmptyPasswords yes'):
+					check_results[2].append('Empty passwords are allowed')
+				
+				if line.startswith('X11Forwarding yes'):
+					check_results[1].append('X11 forward is allowed')
+				
+				if line.startswith('AllowTcpForwarding yes'):
+					check_results[1].append('TCP forwarding is allowed')
+						
 			fp.close()
 					
 		return check_results
