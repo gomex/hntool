@@ -38,7 +38,7 @@ def usage():
 
 # get our options and process them
 try:
-	optlist, args = getopt.getopt(sys.argv[1:], "lhn:", ["list","help","nocolors"])
+	optlist, args = getopt.getopt(sys.argv[1:], "lhn", ["list","help","nocolors"])
 except getopt.GetoptError:
 	usage()
 	
@@ -59,31 +59,39 @@ for i, k in optlist:
 		sys.exit(2)
 	
 	if i in ('-n', '--nocolors'):
-		use_colors = False
-			
+		use_colors = False			
 	
 	if i in ('-h', '--help'):
 		usage()
 
 		
-# Methods to show the check results
-def msg_low_status(msg):
+# Method to show the check results
+def msg_status(msg, status):
 	if use_colors:
-		return colors.colors.ENDC + '[ ' + colors.colors.LOW + 'LOW' + colors.colors.ENDC + ' ]    ' + msg
-	else:
-		return '[ LOW ]    ' + msg
+		if status == 'ok':
+			return colors.colors.ENDC + '[ ' + colors.colors.OKBLUE + 'OK' + colors.colors.ENDC + ' ]    ' + msg
 
-def msg_medium_status(msg):
-	if use_colors:
-		return colors.colors.ENDC + '[ ' + colors.colors.WARNING + 'MEDIUM' + colors.colors.ENDC + ' ] ' + msg
-	else:
-		return '[ MEDIUM ] ' + msg
+		elif status == 'low':
+			return colors.colors.ENDC + '[ ' + colors.colors.LOW + 'LOW' + colors.colors.ENDC + ' ]    ' + msg
 
-def msg_high_status(msg):
-	if use_colors:
-		return colors.colors.ENDC + '[ ' + colors.colors.HIGH + 'HIGH' + colors.colors.ENDC + ' ]   ' + msg		
+		elif status == 'medium':
+			return colors.colors.ENDC + '[ ' + colors.colors.WARNING + 'MEDIUM' + colors.colors.ENDC + ' ] ' + msg
+
+		elif status == 'high':
+			return colors.colors.ENDC + '[ ' + colors.colors.HIGH + 'HIGH' + colors.colors.ENDC + ' ]   ' + msg		
+		
 	else:
-		return '[ HIGH ]  ' + msg
+		if status == 'ok':
+			return '[ OK ]     ' + msg
+		
+		elif status == 'low':
+			return '[ LOW ]    ' + msg
+		
+		elif status == 'medium':
+			return '[ MEDIUM ] ' + msg
+		
+		elif status == 'high':
+			return '[ MEDIUM ] ' + msg
 		
 
 # Run all the modules and its checks. The results of each module goes to "check_results"
@@ -98,12 +106,12 @@ for module in get_modules():
 	# messages.
 	if check_results[0] != []:
 		for j in check_results[0]:
-			print string.ljust(module, 20) + msg_low_status(j)
+			print string.ljust(module, 20) + msg_status(j, 'low')
 	if check_results[1] != []:
 		for j in check_results[1]:
-			print string.ljust(module, 20) + msg_medium_status(j) 
+			print string.ljust(module, 20) + msg_status(j, 'medium') 
 	if check_results[2] != []:
 		for j in check_results[2]:
-			print string.ljust(module, 20) + msg_high_status(j)
+			print string.ljust(module, 20) + msg_status(j, 'high')
 
 			
