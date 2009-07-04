@@ -25,33 +25,44 @@ class rule:
 	def long_name(self):
 		return "Checks security problems on sshd config file"
 	def analyze(self):
-		check_results = [[],[],[]]
+		check_results = [[],[],[],[]]
 		ssh_conf_file = '/etc/ssh/sshd_config'
 		
 		if os.path.isfile(ssh_conf_file):
 			fp = open(ssh_conf_file,'r')
+			lines = [x.strip('\n') for x in fp.readlines()]			
 			
-			for line in fp:
+			if 'Port 22' in lines or '#Port 22' in lines:					
+				check_results[1].append('SSH is using the default port')
+			else:
+				check_results[0].append('SSH is not using the default port')
 				
-				if line.startswith('Port 22') or line.startswith('#Port 22'):					
-					check_results[0].append('SSH is using the default port')
-					
-				if line.startswith('PermitRootLogin yes') or line.startswith('#PermitRootLogin'):					
-					check_results[1].append('Root access allowed!')
-					
-				if line.startswith('Protocol'):					
-					if not line.startswith('Protocol 2'):		
-						check_results[1].append('SSH is not using protocol v2')
-						
-				if line.startswith('PermitEmptyPasswords yes'):
-					check_results[2].append('Empty passwords are allowed')
 				
-				if line.startswith('X11Forwarding yes'):
-					check_results[1].append('X11 forward is allowed')
+			if 'PermitRootLogin yes' in lines or '#PermitRootLogin' in lines:
+				check_results[1].append('Root access allowed!')
+			else:
+				check_results[0].append('Root access is not allowed!')
+          
+			if 'Protocol 2' not in lines:    
+				check_results[1].append('SSH is not using protocol v2')
+			else:
+				check_results[0].append('SSH is using protocol v2')
 				
-				if line.startswith('AllowTcpForwarding yes'):
-					check_results[1].append('TCP forwarding is allowed')
-						
+			if 'PermitEmptyPasswords yes' in lines:
+				check_results[2].append('Empty passwords are allowed')
+			else:
+				check_results[0].append('Empty passwords are not allowed')
+        
+			if 'X11Forwarding yes' in lines:
+				check_results[1].append('X11 forward is allowed')
+			else:
+				check_results[0].append('X11 forward is not allowed')
+        
+			if 'AllowTcpForwarding yes' in lines:
+				check_results[1].append('TCP forwarding is allowed')
+			else:
+				check_results[0].append('TCP forwarding is not allowed')
+				
 			fp.close()
 					
 		return check_results

@@ -96,22 +96,25 @@ def msg_status(msg, status):
 
 # Run all the modules and its checks. The results of each module goes to "check_results"
 for module in get_modules():
-	check_results = [[],[],[]] # low, medium and high
+	check_results = [[],[],[],[]] # ok, low, medium and high
 	
 	check_results = __import__('hntool.' + module ,globals(), locals(), [hntool]).rule().analyze()
 	
-	# Print all the results, from the 3 types of messages (low, medium and high).
-	# First message is the "low" one (check_results[0]). The second one is
-	# "medium" (check_results[1]) and the last one shows all "high" (check_results[2]) 
-	# messages.
+	# Print all the results, from the 4 types of messages (ok, low, medium and high).
+	# First message is the "ok" one (check_results[0]). The second one is
+	# "low" (check_results[1]). The third (check_results[2]) is for "warnings" 
+	# and the last one shows all "high" (check_results[3]) # messages.
 	if check_results[0] != []:
 		for j in check_results[0]:
-			print string.ljust(module, 20) + msg_status(j, 'low')
+			print string.ljust(module, 20) + msg_status(j, 'ok')
 	if check_results[1] != []:
 		for j in check_results[1]:
-			print string.ljust(module, 20) + msg_status(j, 'medium') 
+			print string.ljust(module, 20) + msg_status(j, 'low')
 	if check_results[2] != []:
 		for j in check_results[2]:
+			print string.ljust(module, 20) + msg_status(j, 'medium') 
+	if check_results[3] != []:
+		for j in check_results[3]:
 			print string.ljust(module, 20) + msg_status(j, 'high')
 
 			

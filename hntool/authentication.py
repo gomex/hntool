@@ -25,7 +25,7 @@ class rule:
 	def long_name(self):
 		return "Checks users, groups and authentications"
 	def analyze(self):
-		check_results = [[],[],[]]
+		check_results = [[],[],[],[]]
 		passwd_file = '/etc/passwd'
 		
 		if os.path.isfile(passwd_file):
@@ -37,11 +37,11 @@ class rule:
 				
 				# Checking if there's a user (other than root) that has UID 0
 				if user[0] != 'root' and user[2] == '0':
-					check_results[2].append('There is a user (not root) with UID 0')					
+					check_results[3].append('There is a user (not root) with UID 0')					
 				
 				# Checking if there's a user (other than root) with a valid shell
 				if user[0] != 'root' and user[6] not in ['/sbin/nologin', '/bin/false']:										 
-					check_results[1].append('User ' + user[0] + ' may have a harmful shell (' + user[6] + ')')
+					check_results[2].append('User ' + user[0] + ' may have a harmful shell (' + user[6] + ')')
 						
 			fp.close()
 					
