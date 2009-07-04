@@ -69,10 +69,10 @@ for i, k in optlist:
 def msg_status(msg, status):
 	if use_colors:
 		if status == 'ok':
-			return colors.colors.ENDC + '[ ' + colors.colors.OKBLUE + 'OK' + colors.colors.ENDC + ' ]    ' + msg
+			return colors.colors.ENDC + '[ ' + colors.colors.OKGREEN + '  OK' + colors.colors.ENDC + '   ] ' + msg
 
 		elif status == 'low':
-			return colors.colors.ENDC + '[ ' + colors.colors.LOW + 'LOW' + colors.colors.ENDC + ' ]    ' + msg
+			return colors.colors.ENDC + '[ ' + colors.colors.LOW + ' LOW' + colors.colors.ENDC + '   ] ' + msg
 
 		elif status == 'medium':
 			return colors.colors.ENDC + '[ ' + colors.colors.WARNING + 'MEDIUM' + colors.colors.ENDC + ' ] ' + msg
@@ -82,16 +82,16 @@ def msg_status(msg, status):
 		
 	else:
 		if status == 'ok':
-			return '[ OK ]     ' + msg
+			return '[   OK   ] ' + msg
 		
 		elif status == 'low':
-			return '[ LOW ]    ' + msg
+			return '[  LOW   ] ' + msg
 		
 		elif status == 'medium':
 			return '[ MEDIUM ] ' + msg
 		
 		elif status == 'high':
-			return '[ MEDIUM ] ' + msg
+			return '[ HIGH  ] ' + msg
 		
 
 # Run all the modules and its checks. The results of each module goes to "check_results"
@@ -116,5 +116,3 @@ for module in get_modules():
 	if check_results[3] != []:
 		for j in check_results[3]:
 			print string.ljust(module, 20) + msg_status(j, 'high')
-
-			

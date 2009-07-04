@@ -17,7 +17,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
-import os, ConfigParser
+import os
 
 class rule:
 	def short_name(self):
@@ -30,7 +30,7 @@ class rule:
 		
 		if os.path.isfile(ssh_conf_file):
 			fp = open(ssh_conf_file,'r') 
-			lines = [x.strip('\n') for x in fp.readlines()]			
+			lines = [x.strip('\n') for x in fp.readlines()]
 			
 			# Checking if SSH is using the default port
 			if 'Port 22' in lines or '#Port 22' in lines:					
