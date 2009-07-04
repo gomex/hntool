@@ -69,16 +69,15 @@ for i, k in optlist:
 def msg_status(msg, status):
 	if use_colors:
 		if status == 'ok':
-			return colors.colors.ENDC + '[ ' + colors.colors.OKGREEN + '  OK' + colors.colors.ENDC + '   ] ' + msg
-
+			return string.ljust(msg,50) + colors.colors.ENDC + '[ ' + colors.colors.OKGREEN + '  OK' + colors.colors.ENDC + '   ] '
 		elif status == 'low':
-			return colors.colors.ENDC + '[ ' + colors.colors.LOW + ' LOW' + colors.colors.ENDC + '   ] ' + msg
+			return string.ljust(msg,50) + colors.colors.ENDC + '[ ' + colors.colors.LOW + ' LOW' + colors.colors.ENDC + '   ] '
 
 		elif status == 'medium':
-			return colors.colors.ENDC + '[ ' + colors.colors.WARNING + 'MEDIUM' + colors.colors.ENDC + ' ] ' + msg
+			return string.ljust(msg,50) + colors.colors.ENDC + '[ ' + colors.colors.WARNING + 'MEDIUM' + colors.colors.ENDC + ' ] '
 
 		elif status == 'high':
-			return colors.colors.ENDC + '[ ' + colors.colors.HIGH + 'HIGH' + colors.colors.ENDC + ' ]   ' + msg		
+			return string.ljust(msg,50) + colors.colors.ENDC + '[ ' + colors.colors.HIGH + 'HIGH' + colors.colors.ENDC + ' ]   '
 		
 	else:
 		if status == 'ok':
@@ -98,7 +97,12 @@ def msg_status(msg, status):
 for module in get_modules():
 	check_results = [[],[],[],[]] # ok, low, medium and high
 	
+	# Getting all results from the check and the module/check description
 	check_results = __import__('hntool.' + module ,globals(), locals(), [hntool]).rule().analyze()
+	check_description = __import__('hntool.' + module ,globals(), locals(), [hntool]).rule().long_name()
+	
+	# Prints the module description
+	print '\n' + check_description
 	
 	# Print all the results, from the 4 types of messages (ok, low, medium and high).
 	# First message is the "ok" one (check_results[0]). The second one is
@@ -106,13 +110,13 @@ for module in get_modules():
 	# and the last one shows all "high" (check_results[3]) # messages.
 	if check_results[0] != []:
 		for j in check_results[0]:
-			print string.ljust(module, 20) + msg_status(j, 'ok')
+			print '   ' + msg_status(j, 'ok')
 	if check_results[1] != []:
 		for j in check_results[1]:
-			print string.ljust(module, 20) + msg_status(j, 'low')
+			print '   ' + msg_status(j, 'low')
 	if check_results[2] != []:
 		for j in check_results[2]:
-			print string.ljust(module, 20) + msg_status(j, 'medium') 
+			print '   ' + msg_status(j, 'medium')
 	if check_results[3] != []:
 		for j in check_results[3]:
-			print string.ljust(module, 20) + msg_status(j, 'high')
+			print '   ' + msg_status(j, 'high')
