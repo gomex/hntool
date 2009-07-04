@@ -18,6 +18,7 @@
 # 
 
 import os
+import stat
 
 class rule:
 	def short_name(self):
@@ -27,11 +28,12 @@ class rule:
 	def analyze(self):
 		check_results = [[],[],[],[]]
 		passwd_file = '/etc/passwd'
+		shadow_file = '/etc/shadow'
 		
 		if os.path.isfile(passwd_file):
-			fp = open(passwd_file,'r')
+			passwd_fp = open(passwd_file,'r')
 			
-			for line in fp:
+			for line in passwd_fp:
 				# Gets the values of each line of the passwd file
 				user = line.strip('\n').split(':') 
 				
@@ -41,9 +43,14 @@ class rule:
 				
 				# Checking if there's a user (other than root) with a valid shell
 				if user[0] != 'root' and user[6] not in ['/sbin/nologin', '/bin/false']:										 
-					check_results[2].append('User ' + user[0] + ' may have a harmful shell (' + user[6] + ')')
+					check_results[2].append('User "' + user[0] + '" may have a harmful shell (' + user[6] + ')')
+					
+			# Checking the permissions of the root home directory		
+			if oct(os.stat('/root')[stat.ST_MODE] & 0777) > 0750:
+				check_results[2].append('Permissions on /root dir are greater than 700')
 						
-			fp.close()
+			passwd_fp.close()
+		
 					
 		return check_results
 	def type(self):
