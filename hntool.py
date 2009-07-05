@@ -19,7 +19,11 @@
 #
 # 
 
-import hntool, getopt, sys, string, colors,os
+import colors
+import getopt
+import hntool
+import string
+import sys
 
 
 # Functions
