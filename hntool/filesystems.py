@@ -17,6 +17,7 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
 
+import hntool
 import os
 
 class rule:
@@ -34,12 +35,13 @@ class rule:
 		else:
 			check_results[0].append('mlocate.db found')
         
-		# Checking for old files in /tmp
-		find_results = os.popen('find /tmp -type f -atime +30')
-		if len(find_results.readlines()) > 0:
-			check_results[1].append('Found old files (+30 days) in /tmp')
-		else:
-			check_results[0].append('Did not found old files (+30 days) in /tmp')
+		if os.getenv('USER') == 'root':
+			# Checking for old files in /tmp
+			find_results = os.popen('find /tmp -type f -atime +30')
+			if len(find_results.readlines()) > 0:
+				check_results[1].append('Found old files (+30 days) in /tmp')
+			else:
+				check_results[0].append('Did not found old files (+30 days) in /tmp')
 		
 		return check_results
 	def type(self):
