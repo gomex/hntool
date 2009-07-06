@@ -97,6 +97,8 @@ def msg_status(msg, status):
 			return '[ HIGH  ] ' + msg
 		
 
+print '[ Starting hntool checks ]'
+
 # Run all the modules and its checks. The results of each module goes to "check_results"
 for module in get_modules():
 	check_results = [[],[],[],[]] # ok, low, medium and high
