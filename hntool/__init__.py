@@ -1,7 +1,7 @@
-# 
+#
 # hntool rules - __init__
 # Copyright (C) 2009 Hugo Doria <mail@hugodoria.org>
-# 
+#
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
@@ -15,9 +15,9 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-# 
+#
 
-__files__ = ['authentication', 'filesystems']
-__services__ = ['ssh']
+__files__ = ['authentication', 'filesystems', 'remote']
+__services__ = ['ssh', 'ports']
 
-__all__ = __files__ + __services__ 
+__all__ = __files__ + __services__
