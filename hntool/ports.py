@@ -39,9 +39,9 @@ class rule:
 				for indexc, item in enumerate(lines):
 					port = lines[indexc][3].split(':')[1]
 					service = lines[indexc][6].split('/')[1]
-					check_results[4].append('Found service "' + service + '" using port "' + port + '"')
+					check_results[4].append('Service "' + service + '" using port "' + port + '" found')
 			else:
-				check_results[0].append('Did not found any open port')
+				check_results[0].append("There's no ports opened")
 
 			device_list = ['/dev/null', '/dev/tty', '/dev/console']
 			exec_device = False

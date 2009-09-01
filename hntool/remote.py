@@ -23,7 +23,7 @@ class rule:
 	def short_name(self):
 		return "remote access"
 	def long_name(self):
-		return "Checks for remote access allowed"
+		return "Checks for services with remote access allowed"
 	def analyze(self):
 		check_results = [[],[],[],[],[]]
 		hosts_allow_file = '/etc/hosts.allow'
@@ -47,9 +47,9 @@ class rule:
 					if (service[0] == 'ALL' and \
 							service[1] == 'ALL' and \
 							service[2] == 'DENY'):
-						check_results[0].append('Default policy is deny any remote access')
+						check_results[0].append("Service's default policy is to reject connections from all")
 			else:
-				check_results[1].append('Not found a default policy')
+				check_results[1].append('Default policy not found')
 			#closing file
 			fp.close()
 
@@ -70,21 +70,21 @@ class rule:
 					#specific service with all access
 					if service[0] != 'ALL' and service[1] == 'ALL':
 						check_results[2].append('Service "' + service[0] + \
-								'" with all remote access')
+								'" accepts remote connections from ALL')
 					#specific service with all access
 					elif service[0] != 'ALL' and service[1] != 'ALL':
 						check_results[2].append('Service "' + service[0] + \
-								'" with remote access from "' + service[1] + '"')
+								'" accepts remote connections from "' + service[1] + '"')
 					#any service to specific address
 					elif service[0] == 'ALL' and service[1] != 'ALL':
-						check_results[2].append('Any service are with remote access from "' + service[1] + '"')
+						check_results[2].append('Services are accepting remote access from "' + service[1] + '"')
 					#any service with all access
 					elif service[0] == 'ALL' and service[1] == 'ALL':
-						check_results[3].append('Any service are with all remote access')
+						check_results[3].append('Services are accepting remote access from ALL')
 			#closing file
 			fp.close()
 		else:
-			check_results[0].append('Did not found services with all remote access')
+			check_results[0].append("There's no service accepting remote connections from ALL")
 
 		return check_results
 
