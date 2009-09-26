@@ -26,7 +26,7 @@ class rule:
 		return "Checks security problems on sshd config file"
 	def analyze(self):
 		check_results = [[],[],[],[],[]]
-		ssh_conf_file = ['/etc/ssh/sshd_config', '/etc/sshd_config'] 
+		ssh_conf_file = ['/etc/ssh/sshd_config', '/etc/sshd_config', '/etc/ssh/ssh_config'] 
 
 		for sshd_conf in ssh_conf_file:
 			if os.path.isfile(sshd_conf):
