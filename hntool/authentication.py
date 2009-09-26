@@ -41,15 +41,20 @@ class rule:
 				for indexv, col in enumerate(line):
 					users[indexc][indexv] = col.strip()
 
-			if users:
+			if users:									
+				users_with_uid_zero = False # will be true if we find users with UID 0
 				for user in users:
-				# Checking if there's a user (other than root) that has UID 0
+					# Checking if there's a user (other than root) that has UID 0
 					if user[0] != 'root' and user[2] == '0':
 						check_results[3].append('There is a user (not root) with UID 0')
+						users_with_uid_zero = True
 
 					# Checking if there's a user (other than root) with a valid shell
 					if user[0] != 'root' and user[6] not in ['/sbin/nologin', '/bin/false', '/usr/bin/false']:
 						check_results[2].append('User "' + user[0] + '" may have a harmful shell (' + user[6] + ')')
+						
+				if not users_with_uid_zero:
+					check_results[0].append("There aren't users (not root) with UID 0")
 
 			# Checking the permissions of the root home directory
 			if os.path.exists('/root'):
