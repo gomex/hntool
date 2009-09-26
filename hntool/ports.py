@@ -29,7 +29,7 @@ class rule:
 
 		if os.getenv('USER') == 'root':
 			# Checking for old files in /tmp
-			netstat_results = os.popen('netstat -tulpan | grep LISTEN')
+			netstat_results = os.popen('LC_ALL="en_US" netstat -tulpan | grep LISTEN')
 			netstat_results = [res for res in netstat_results.readlines()]
 
 			if len(netstat_results) > 0:
