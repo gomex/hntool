@@ -27,16 +27,19 @@ import sys
 
 
 # Functions
+
 # Return all possible modules (rules)
 def get_modules():
+	'''Method to return all modules available'''
 	return hntool.__all__
 
 # Show the usage help
 def usage():
+	'''Method to show the usage help'''
 	print "Usage: " + sys.argv[0] + ' [options]'
-	print "       -h, --help       	: print this help"
-	print "       -l, --list       	: returns list of available rules"
-	print "       -n, --nocolors  : does not use colors on output"
+	print "       -h, --help	: print this help"
+	print "       -l, --list	: returns list of available rules"
+	print "       -n, --nocolors	: does not use colors on output"
 	sys.exit(2)
 
 
@@ -61,9 +64,11 @@ for i, k in optlist:
 
 		sys.exit(2)
 
+	# do not use colors
 	if i in ('-n', '--nocolors'):
 		use_colors = False
 
+	# show help
 	if i in ('-h', '--help'):
 		usage()
 
@@ -71,39 +76,29 @@ for i, k in optlist:
 # Method to show the check results
 def msg_status(msg, status):
 	if use_colors:
-		if status == 'info':
-			return string.ljust(msg,70) + colors.colors.ENDC + \
-				'[ ' + colors.colors.INFO + ' INFO' + colors.colors.ENDC + '  ] '
 		if status == 'ok':
 			return string.ljust(msg,70) + colors.colors.ENDC + \
 				'[ ' + colors.colors.OKGREEN + '  OK' + colors.colors.ENDC + '   ] '
 		elif status == 'low':
 			return string.ljust(msg,70) + colors.colors.ENDC + \
 				'[ ' + colors.colors.LOW + ' LOW' + colors.colors.ENDC + '   ] '
-
 		elif status == 'medium':
 			return string.ljust(msg,70) + colors.colors.ENDC + \
 				'[ ' + colors.colors.WARNING + 'MEDIUM' + colors.colors.ENDC + ' ] '
-
 		elif status == 'high':
 			return string.ljust(msg,70) + colors.colors.ENDC + \
 				'[  ' + colors.colors.HIGH + 'HIGH' + colors.colors.ENDC + '  ] '
+		elif status == 'info':
+			return string.ljust(msg,70) + colors.colors.ENDC + \
+				'[ ' + colors.colors.INFO + ' INFO' + colors.colors.ENDC + '  ] '
+
 
 	else:
-		if status == 'ok':
-			return '[   OK   ] ' + msg
-
-		if status == 'info':
-			return '[  INFO  ] ' + msg
-
-		elif status == 'low':
-			return '[  LOW   ] ' + msg
-
-		elif status == 'medium':
-			return '[ MEDIUM ] ' + msg
-
-		elif status == 'high':
-			return '[ HIGH ] ' + msg
+		if status == 'ok': 		return string.ljust(msg,70) + '[    OK    ]'
+		elif status == 'info': 	return string.ljust(msg,70) + '[   INFO  ]'
+		elif status == 'low':		return string.ljust(msg,70) + '[   LOW    ]'
+		elif status == 'medium':	return string.ljust(msg,70) + '[  MEDIUM  ]'
+		elif status == 'high':	return string.ljust(msg,70) + '[    HIGH  ]'
 
 
 print '[ Starting hntool checks ]'
@@ -119,10 +114,11 @@ for module in get_modules():
 	# Prints the module description
 	print '\n' + check_description
 
-	# Print all the results, from the 4 types of messages (ok, low, medium and high).
+	# Print all the results, from the 5 types of messages (ok, low, medium, high and info).
 	# First message is the "ok" one (check_results[0]). The second one is
 	# "low" (check_results[1]). The third (check_results[2]) is for "warnings"
-	# and the last one shows all "high" (check_results[3]) # messages.
+	# and the fourth one is "high" (check_results[3]), The last one is for
+	# info messages.
 	if check_results[0] != []:
 		for j in check_results[0]:
 			print '   ' + msg_status(j, 'ok')

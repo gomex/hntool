@@ -127,8 +127,8 @@ that each hntool module must have:
 	description is used when listing all the rules using hntool -l.	
 	
 	* analyze(self) 
-	Should return a list comprising in turn of five lists: ok, info, low, medium 
-	and high, respectively. 
+	Should return a list comprising in turn of five lists: ok, low, medium, 
+	high and info, respectively. 
 	
 	* type(self) 
 	"files" for a module processing simple files and configs
