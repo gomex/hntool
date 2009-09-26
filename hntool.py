@@ -24,9 +24,15 @@ import getopt
 import hntool
 import string
 import sys
+import os
 
 
 # Functions
+
+def is_root():
+	'''Method to check if hntool is running as root.'''		
+	if os.getuid() == 0:
+		return true		
 
 # Return all possible modules (rules)
 def get_modules():
@@ -46,6 +52,14 @@ def usage():
 # vars
 use_colors = True # using colors by default
 hntool_version = 0.1
+
+# checking if we are root
+if not is_root():
+	print 'Error: You must be root to run hntool'
+	print
+	print usage()
+	sys.exit(2)
+
 
 # get our options and process them
 try:
@@ -94,11 +108,11 @@ def msg_status(msg, status):
 
 
 	else:
-		if status == 'ok': 		return string.ljust(msg,70) + '[    OK    ]'
-		elif status == 'info': 	return string.ljust(msg,70) + '[   INFO  ]'
-		elif status == 'low':		return string.ljust(msg,70) + '[   LOW    ]'
+		if status == 'ok': 		        return string.ljust(msg,70) + '[    OK    ]'
+		elif status == 'info': 	    return string.ljust(msg,70) + '[   INFO  ]'
+		elif status == 'low':		    return string.ljust(msg,70) + '[   LOW    ]'
 		elif status == 'medium':	return string.ljust(msg,70) + '[  MEDIUM  ]'
-		elif status == 'high':	return string.ljust(msg,70) + '[    HIGH  ]'
+		elif status == 'high':	    return string.ljust(msg,70) + '[    HIGH  ]'
 
 
 print '[ Starting hntool checks ]'
