@@ -32,7 +32,7 @@ import os
 def is_root():
 	'''Method to check if hntool is running as root.'''		
 	if os.getuid() == 0:
-		return true		
+		return True		
 
 # Return all possible modules (rules)
 def get_modules():
@@ -53,7 +53,7 @@ def usage():
 use_colors = True # using colors by default
 hntool_version = 0.1
 
-# checking if we are root
+# checking if we are root. we need to be. oh yeah, baby.
 if not is_root():
 	print 'Error: You must be root to run hntool'
 	print
