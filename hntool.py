@@ -34,19 +34,21 @@ def get_modules():
 # Show the usage help
 def usage():
 	print "Usage: " + sys.argv[0] + ' [options]'
-	print "       -h, --help       : print this help"
-	print "       -l, --list       : returns list of available rules"
-	print "       -n, --nocolors   : does not use colors on output"
+	print "       -h, --help       	: print this help"
+	print "       -l, --list       	: returns list of available rules"
+	print "       -n, --nocolors  : does not use colors on output"
 	sys.exit(2)
 
+
+# vars
+use_colors = True # using colors by default
+hntool_version = 0.1
 
 # get our options and process them
 try:
 	optlist, args = getopt.getopt(sys.argv[1:], "lhn", ["list","help","nocolors"])
 except getopt.GetoptError:
 	usage()
-
-use_colors = True
 
 for i, k in optlist:
 	# Show all available modules (rules) and its description

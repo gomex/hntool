@@ -1,0 +1,135 @@
+
+WHAT IS IT?
+-----------------------------
+
+hntool is a hardening tool for Linux/BSD.
+
+HOW CAN I HELP?
+-----------------------------
+
+There are several ways that you can contribute and help hntool's development. 
+You can contribute with code, patchs, bugs and feature requests.
+
+To report a bug or a feature request for hntool, file a bug in GitHub or send 
+a mail to mail@hugodoria.org. If you're reporting a bug, please give concrete 
+examples of how and where the problem occurs.
+
+If you've a patch (fixing a bug or a new hntool module), then you can send it 
+to mail@hugodoria.org. hntool development is managed with git, so 
+git-formatted patches are preferred. 
+
+hntool's source is available on:
+
+http://github.com/hdoria/hntool/tree/master
+
+HOW TO USE
+-----------------------------
+
+Run hntool with:
+
+$ python hntool.py
+
+or
+
+# ./hntool.py
+
+You can also see the hntool(1) manual by typing man hntool at the command line 
+or see the usage help:
+
+$ hntool -h 
+
+
+UNDERSTANDING THE OUTPUT
+-----------------------------
+
+There are 4 types of results:
+
+OK : 
+	Means that the item checked is fine and that you do not need to worry
+
+INFO: 
+	Means that you should know the item status, but probably it is fine. A port
+	opened, for example.
+
+LOW:
+	Means that a security problem was found, but it does not provides a high risk
+	for your system.
+
+MEDIUM:
+	Things are getting worse and you should start to worry about these itens.
+
+HIGH:
+	You have an important security hole/problem on your system and you
+	should fix it NOW or run and save your life.
+
+
+
+HOW TO CREATE A MODULE
+-----------------------------
+
+This section documents the innards of hntool and specifies how to create 
+a new module.
+
+The main hntool program (hntool.py) runs a list of rules defined in __files__ 
+and __services__.
+
+	* __files__ :
+		defines the rules which process simple files and configs.
+
+	* __services__ :
+		defines the rules which checks the security on services and
+		daemons. 
+
+Once your module is finalized, remember to add it to the appropriate array 
+(__files__ or __services__) defined in hntool/__init__.py
+
+A sample hntool module is like this (hntool/ssh.py):
+
+import os
+
+class rule:
+	def short_name(self):
+		return "ssh"
+	def long_name(self):
+		return "Checks security problems on sshd config file"
+	def analyze(self):
+		check_results = [[],[],[],[],[]]
+		ssh_conf_file = ['/etc/ssh/sshd_config', '/etc/sshd_config']
+
+		for sshd_conf in ssh_conf_file:
+			if os.path.isfile(sshd_conf):
+				fp = open(sshd_conf,'r')
+				lines = [x.strip('\n') for x in fp.readlines()]
+
+				# Checking if SSH is using the default port
+				if 'Port 22' in lines or '#Port 22' in lines:
+					check_results[1].append('SSH is using the default port')
+				else:
+					check_results[0].append('SSH is not using the default port')			
+
+				# Closing the sshd_config file
+				fp.close()
+
+		return check_results
+	def type(self):
+		return "files"
+
+
+Mostly, the code is self-explanatory. The following are the list of the methods 
+that each hntool module must have:
+
+	* short_name(self) 
+	Returns a string containing a short name of the module. Usually,this is the 
+	same as the basename of the module file.
+	
+	* long_name(self) 
+	Returns a string containing a concise description of the module. This 
+	description is used when listing all the rules using hntool -l.	
+	
+	* analyze(self) 
+	Should return a list comprising in turn of five lists: ok, info, low, medium 
+	and high, respectively. 
+	
+	* type(self) 
+	"files" for a module processing simple files and configs
+	"services" for a module processing services and daemons 
