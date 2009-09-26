@@ -39,6 +39,12 @@ def get_modules():
 	'''Method to return all modules available'''
 	return hntool.__all__
 
+def is_unix():
+	'''Method to check if we have power'''
+	if os.name == 'posix':
+		return True
+	return False
+
 # Show the usage help
 def usage():
 	'''Method to show the usage help'''
@@ -53,13 +59,17 @@ def usage():
 use_colors = True # using colors by default
 hntool_version = 0.1
 
+# yes, only unix for now
+if not is_unix():
+	print 'Error: You must have a Unix(-like) box. (No candy for you)'
+	sys.exit(2)
+
 # checking if we are root. we need to be. oh yeah, baby.
 if not is_root():
 	print 'Error: You must be root to run hntool'
 	print
 	print usage()
 	sys.exit(2)
-
 
 # get our options and process them
 try:
