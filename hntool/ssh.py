@@ -26,11 +26,16 @@ class rule:
 		return "Checks security problems on sshd config file"
 	def analyze(self):
 		check_results = [[],[],[],[],[]]
-		ssh_conf_file = ['/etc/ssh/sshd_config', '/etc/sshd_config']
+		ssh_conf_file = ['/etc/ssh/sshd_config', '/etc/sshd_config'] 
 
 		for sshd_conf in ssh_conf_file:
 			if os.path.isfile(sshd_conf):
-				fp = open(sshd_conf,'r')
+				try:
+					fp = open(sshd_conf,'r')
+				except IOError, (errno, strerror):
+					check_results[4].append('Could not open %s: %s' % (sshd_conf, strerror))
+					continue
+
 				lines = [x.strip('\n') for x in fp.readlines()]
 
 				# Checking if SSH is using the default port
