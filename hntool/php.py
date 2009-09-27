@@ -36,7 +36,7 @@ class rule:
                 try:
                     fp = open(php_conf,'r')
                 except IOError, (errno, strerror):
-                    check_results[4].append('Could not open %s: %s' % (sshd_conf, strerror))
+                    check_results[4].append('Could not open %s: %s' % (php_conf, strerror))
                     continue
 
                 lines = [x.strip('\n').lower() for x in fp.readlines()]
