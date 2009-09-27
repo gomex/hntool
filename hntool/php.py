@@ -17,11 +17,6 @@
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-""" This module implements rules to check security on PHP config files. \
-Most of rules were written based on Mad Irish PHP Security tips: http://www.madirish.net/?article=229
-"""
-
-
 import os
 import ConfigParser
 
