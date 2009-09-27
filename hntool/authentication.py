@@ -27,9 +27,10 @@ class rule:
 		return "Checks users, groups and authentications"
 	def analyze(self):
 		check_results = [[],[],[],[],[]]
-		passwd_file = '/etc/passwd'
-		shadow_file = '/etc/shadow'
+		passwd_file = '/etc/passwd'		
+		logindefs_file = '/etc/login.defs'
 
+		# Checks about the passwd file
 		if os.path.isfile(passwd_file):
 			# Gets the values of each line of the passwd file
 			passwd_fp = open(passwd_file,'r')
@@ -62,6 +63,26 @@ class rule:
 					check_results[2].append('Permissions on /root dir are greater than 700')
 
 			passwd_fp.close()
+			
+			
+		# Checks about the login.defs file
+		if os.path.isfile(logindefs_file):
+			logindefs_fp = open(logindefs_file,'r')
+			
+			# Getting only the lines that aren't commented or blank
+			logindefs_lines = [x.strip('\n').split('\t') for x in logindefs_fp.readlines()
+			                   if not (x[0].startswith('#') or not (x[0] != ''))]	
+			
+			# Getting only the line that starts with PASS_MAX_DAYS
+			logindefs_lines = [x for i, x in enumerate(logindefs_lines) \
+						if x[0].startswith('PASS_MAX_DAYS')]	
+			
+			# If PASS_MAX_DAYS is set to more than 90 day then we have a problem
+			# logindefs_lines[0][1] == value of PASS_MAX_DAYS on the login.defs file
+			if int(logindefs_lines[0][1]) > 90:
+				check_results[2].append('By default passwords do not expires on 90 days or less')
+			else:
+				check_results[0].append('By default passwords expires on 90 days or less')
 
 
 		return check_results
