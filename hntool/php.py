@@ -34,8 +34,10 @@ class rule:
         check_results = [[],[],[],[],[]]
         conf_files = ['/etc/php5/apache2/php.ini', '/etc/php5/cli/php.ini', '/etc/php.ini'] 
 
+        php_conf_file_found = False
         for php_conf in conf_files:
             if os.path.isfile(php_conf):                
+                php_conf_file_found = True
                 config = ConfigParser.ConfigParser()
                 
                 try:
@@ -93,7 +95,9 @@ class rule:
                         check_results[4].append('Unknown value for expose PHP')
                 else:
                     check_results[4].append('Expose PHP not found')
-                
+                    
+        if not php_conf_file_found:
+            check_results[4].append('Php conf file not found')
 
         return check_results
     def type(self):
