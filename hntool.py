@@ -28,7 +28,6 @@ import os
 
 
 # Functions
-
 def is_root():
 	'''Method to check if hntool is running as root.'''		
 	if os.getuid() == 0:
@@ -129,7 +128,7 @@ print '[ Starting hntool checks ]'
 
 # Run all the modules and its checks. The results of each module goes to "check_results"
 for module in get_modules():
-	check_results = [[],[],[],[],[]] # ok, low, medium and high
+	check_results = [[],[],[],[],[]] # ok, low, medium, high and info
 
 	# Getting all results from the check and the module/check description
 	check_results = __import__('hntool.' + module ,globals(), locals(), [hntool]).rule().analyze()

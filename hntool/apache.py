@@ -25,77 +25,67 @@ class rule:
     def short_name(self):
         """ Returns a short name used on help """
         return "apache"
-    
+
     def long_name(self):
         """ Returns a module description used on report """
         return "Checks security problems on Apache config file"
-    
+
     def analyze(self):
         """ Analyze Apache config file searching for harmful settings"""
         check_results = [[],[],[],[],[]]
         apache_conf_files = ['/etc/httpd/conf/httpd.conf', '/etc/apache2/conf.d/security', '/etc/apache2/apache2.conf'] 
 
         for apache_conf in apache_conf_files:
-		if os.path.isfile(apache_conf):
-			try:
-				fp = open(apache_conf,'r')
-			except IOError, (errno, strerror):
-				check_results[4].append('Could not open %s: %s' % (apache_conf, strerror))
-				continue
+            if os.path.isfile(apache_conf):
+                try:
+                    fp = open(apache_conf,'r')
+                except IOError, (errno, strerror):
+                    check_results[4].append('Could not open %s: %s' % (apache_conf, strerror))
+                    continue
 
-			lines = [x.strip('\n') for x in fp.readlines()]
+                lines = [x.strip('\n') for x in fp.readlines()]
 
-			# Checking if ServerTokens is using harmful conf
-			if not 'ServerTokens Minimal' in lines:
-				check_results[0].append('ServerTokens is not using harmful conf')				
-			else:
-				check_results[2].append('ServerTokens is using harmful conf (set Minimal)')
+                # Checking if ServerTokens is using harmful conf
+                if not 'ServerTokens Minimal' in lines:
+                    check_results[0].append('ServerTokens is not using harmful conf')				
+                else:			
+                    check_results[2].append('ServerTokens is using harmful conf (set Minimal)')
 
-			# Checking if KeepAlive is set to On			
-			if 'KeepAlive On' in lines:			
-				check_results[0].append('KeepAlive is not using harmful conf')
-			else:
-				check_results[2].append('KeepAlive is using harmful conf (set On)')
+                # Checking if KeepAlive is set to On			
+                if 'KeepAlive On' in lines:			
+                    check_results[0].append('KeepAlive is not using harmful conf')
+                else:
+                    check_results[2].append('KeepAlive is using harmful conf (set On)')
 
-			# Checking if KeepAlive is set to On			
-			if 'ServerSignature Off' in lines:			
-				check_results[0].append('ServerSignature is not using harmful conf')
-			else:
-				check_results[2].append('ServerSignature is using harmful conf (set Off)')
+                # Checking if KeepAlive is set to On			
+                if 'ServerSignature Off' in lines:			
+                    check_results[0].append('ServerSignature is not using harmful conf')
+                else:
+                    check_results[2].append('ServerSignature is using harmful conf (set Off)')
 
-			# Checking if LimitRequestBody is bigger than 0		
-			if 'LimitRequestBody' in lines:			
-				for line in lines: 
-					if line.startswith('LimitRequestBody') is True:
-						piece = line.split(' ')
-						if int(piece[1]) == 0:
-							check_results[0].append('LimitRequestBody is not using harmful value (0)')
-						else:
-							check_results[2].append('LimitRequestBody is using harmful value (0)')
+                # Checking if LimitRequestBody is bigger than 0		
+                if 'LimitRequestBody' in lines:			
+                    for line in lines: 
+                        if line.startswith('LimitRequestBody') is True:
+                            piece = line.split(' ')
+                            if int(piece[1]) == 0:
+                                check_results[0].append('LimitRequestBody is not using harmful value (0)')
+                            else:
+                                check_results[2].append('LimitRequestBody is using harmful value (0)')
 
-			# Checking Timeout less than 300
-			tvalue = 300			
-			for line in lines: 
-				if line.startswith('Timeout') is True:
-					piece = line.split(' ')
-					if int(piece[1]) <= tvalue:
-						check_results[0].append('Timeout is not using harmful value (>=%s)' % (tvalue))
-					else:
-						check_results[2].append('Timeout is using harmful value (>=%s)' % (tvalue))
-			#else:
-			#	check_results[2].append('Timeout is using default value, but is safer')
+                # Checking Timeout less than 300
+                tvalue = 300			
+                for line in lines: 
+                    if line.startswith('Timeout') is True:
+                        piece = line.split(' ')
+                        if int(piece[1]) <= tvalue:
+                            check_results[0].append('Timeout is not using harmful value (>=%s)' % (tvalue))
+                        else:
+                            check_results[2].append('Timeout is using harmful value (>=%s)' % (tvalue))		   
 
-			# Checking if KeepAliveTimeout is less than 15
-			#if line.startswith('KeepAliveTimeout') is True:
-			#	piece = line.split(' ')
-			#	if int(piece[1]) <= 15:
-			#		check_results[0].append('KeepAliveTimeout is not using harmful value (>=15)')
-			#	else:
-			#		check_results[2].append('KeepAliveTimeout is using harmful value (>=15)')
-			
-			# Closing the apache_config file
-			fp.close()
+                # Closing the apache_config file
+                fp.close()
 
-	return check_results
-	def type(self):
-		return "config"
+        return check_results    
+    def type(self):
+        return "config"
