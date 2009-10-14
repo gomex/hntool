@@ -29,6 +29,7 @@ class rule:
 		check_results = [[],[],[],[],[]]
 		passwd_file = '/etc/passwd'		
 		logindefs_file = '/etc/login.defs'
+		inittab_file = '/etc/inittab'
 
 		# Checks about the passwd file
 		if os.path.isfile(passwd_file):
@@ -83,7 +84,24 @@ class rule:
 				check_results[2].append('By default passwords do not expires on 90 days or less')
 			else:
 				check_results[0].append('By default passwords expires on 90 days or less')
-
+				
+			logindefs_fp.close()
+				
+		# Checks about inittab file
+		if os.path.isfile(inittab_file):
+			inittab_fp = open(inittab_file, 'r')
+			
+			# Getting only the lines that aren't commented or blank
+			inittab_lines = [x.strip('\n').split('\t') for x in inittab_fp.readlines()
+			                   if not (x[0].startswith('#') or not (x[0] != ''))]
+			
+			
+			if '~~:S:wait:/sbin/sulogin' in inittab_lines:
+				check_results[0].append('Single-User Mode requires authentication')
+			else:
+				check_results[2].append('Single-User Mode does not requires authentication')
+				
+			inittab_fp.close()
 
 		return check_results
 	def type(self):
