@@ -19,19 +19,9 @@
 # 
 
 class colors:
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[1;92m'
+    OK = '\033[1;92m'
     LOW = '\033[1;30m'
-    WARNING = '\033[1;93m'
-    HIGH = '\033[1;91m'
-    ENDC = '\033[0m'
+    MEDIUM = '\033[1;93m'
+    HIGH = '\033[1;91m'    
     INFO = '\033[37m'
-
-    def disable(self):
-        self.OKBLUE = ''
-        self.OKGREEN = ''
-        self.LOW = ''
-        self.WARNING = ''
-        self.HIGH = ''
-        self.ENDC = ''
-        self.INFO = ''
+    ENDC = '\033[0m'

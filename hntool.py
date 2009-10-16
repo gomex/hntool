@@ -101,13 +101,13 @@ def msg_status(msg, status):
 	if use_colors:
 		if status == 'ok':
 			return string.ljust(msg,70) + colors.colors.ENDC + \
-				'[ ' + colors.colors.OKGREEN + '  OK' + colors.colors.ENDC + '   ] '
+				'[ ' + colors.colors.OK + '  OK' + colors.colors.ENDC + '   ] '
 		elif status == 'low':
 			return string.ljust(msg,70) + colors.colors.ENDC + \
 				'[ ' + colors.colors.LOW + ' LOW' + colors.colors.ENDC + '   ] '
 		elif status == 'medium':
 			return string.ljust(msg,70) + colors.colors.ENDC + \
-				'[ ' + colors.colors.WARNING + 'MEDIUM' + colors.colors.ENDC + ' ] '
+				'[ ' + colors.colors.MEDIUM + 'MEDIUM' + colors.colors.ENDC + ' ] '
 		elif status == 'high':
 			return string.ljust(msg,70) + colors.colors.ENDC + \
 				'[  ' + colors.colors.HIGH + 'HIGH' + colors.colors.ENDC + '  ] '
