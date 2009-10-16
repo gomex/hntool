@@ -28,9 +28,12 @@ class rule:
     def analyze(self):
         check_results = [[],[],[],[],[]]
         pgsql_conf_file = ['/var/lib/pgsql/data/pg_hba.conf', '/var/lib/pgsql/data/postgresql.conf'] 
-
+        
+        
+        postgresql_conf_file_found = False
         for pgsql_conf in pgsql_conf_file:
             if os.path.isfile(pgsql_conf):
+                postgresql_conf_file_found = True
                 try:
                     fp = open(pgsql_conf,'r')
                 except IOError, (errno, strerror):
@@ -61,6 +64,9 @@ class rule:
                     lines = [x.strip('\n') for x in fp.readlines()]
 
                 fp.close()
+                
+        if not postgresql_conf_file_found:
+            check_results[4].append('PostgreSQL conf file not found')
 
 
         return check_results
