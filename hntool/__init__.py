@@ -18,6 +18,6 @@
 #
 
 __files__ = ['authentication', 'filesystems', 'remote', 'php']
-__services__ = ['ssh', 'ports', 'apache']
+__services__ = ['ssh', 'ports', 'apache', 'postgresql']
 
 __all__ = __files__ + __services__
