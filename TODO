@@ -1,0 +1,36 @@
+TODO list for hntool
+=====================
+
+This is the TODO list for hntool. If you have a suggestion, please, send it to
+mail@hugodoria.org or file an issue on GitHub:
+
+http://github.com/hdoria/hntool/issues
+
+
+For hntool 0.1
+--------------
+
+hntool core:
+
+    * Add modules for mysql, iptables and squid
+    * Find a way to check if that module is necessary on runtime. For example,
+        apache rules shouldn't run on servers that does not have apache installed.
+    * Use exceptions (try/except)
+    * Write a man page
+    * Write setup.py
+    
+    
+postgresql module:
+
+    * Check pg_hba.conf
+    * Check postgresql.conf for:
+        ** Default port
+        ** SSL
+        ** password_encryption
+        ** shared_buffers (check sysctl.conf)
+        ** work_mem
+        ** fsync
+        ** full_page_writes
+        ** effective_cache_size
+        ** o autovacuum
+
