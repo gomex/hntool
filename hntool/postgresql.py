@@ -21,48 +21,48 @@ import os
 import shlex
 
 class rule:
-	def short_name(self):
-		return "postgresql"
-	def long_name(self):
-		return "Checks security problems on PostgreSQL config file"
-	def analyze(self):
-		check_results = [[],[],[],[],[]]
-		pgsql_conf_file = ['/var/lib/pgsql/data/pg_hba.conf', '/var/lib/pgsql/data/postgresql.conf'] 
+    def short_name(self):
+        return "postgresql"
+    def long_name(self):
+        return "Checks security problems on PostgreSQL config file"
+    def analyze(self):
+        check_results = [[],[],[],[],[]]
+        pgsql_conf_file = ['/var/lib/pgsql/data/pg_hba.conf', '/var/lib/pgsql/data/postgresql.conf'] 
 
-		for pgsql_conf in pgsql_conf_file:
-			if os.path.isfile(pgsql_conf):
-				try:
-					fp = open(pgsql_conf,'r')
-				except IOError, (errno, strerror):
-					check_results[4].append('Could not open %s: %s' % (pgsql_conf, strerror))
-					continue
+        for pgsql_conf in pgsql_conf_file:
+            if os.path.isfile(pgsql_conf):
+                try:
+                    fp = open(pgsql_conf,'r')
+                except IOError, (errno, strerror):
+                    check_results[4].append('Could not open %s: %s' % (pgsql_conf, strerror))
+                    continue
 
-				# pg_hba.conf validation
-				if 'pg_hba' in pgsql_conf:
-					for line in fp.readlines():
-						if line[0] != '#' and len(line.strip()) > 0:
-							line_conf = shlex.split(line)
+                # pg_hba.conf validation
+                if 'pg_hba' in pgsql_conf:
+                    for line in fp.readlines():
+                        if line[0] != '#' and len(line.strip()) > 0:
+                            line_conf = shlex.split(line)
 
-							# check unix sockets authentication
-							if line_conf[0] == 'local':
-								if 'trust' in line:
-									check_results[1].append('Trusted local Unix authentication are allowed')
-								else:
-									check_results[0].append('Trusted local Unix authentication are not allowed')
+                            # check unix sockets authentication
+                            if line_conf[0] == 'local':
+                                if 'trust' in line:
+                                    check_results[1].append('Trusted local Unix authentication are allowed')
+                                else:
+                                    check_results[0].append('Trusted local Unix authentication are not allowed')
 
-							# check tcp/ip host authentication
-							if 'host' in line_conf[0]:
-								if 'trust' in line:
-									check_results[1].append('Trusted connection on ' + line_conf[3] + ' are allowed')
-								else:
-									check_results[0].append('Trusted connection on ' + line_conf[3] + ' are not allowed')
+                            # check tcp/ip host authentication
+                            if 'host' in line_conf[0]:
+                                if 'trust' in line:
+                                    check_results[1].append('Trusted connection on ' + line_conf[3] + ' are allowed')
+                                else:
+                                    check_results[0].append('Trusted connection on ' + line_conf[3] + ' are not allowed')
 
-				elif 'postgresql' in pgsql_conf:
-					lines = [x.strip('\n') for x in fp.readlines()]
+                elif 'postgresql' in pgsql_conf:
+                    lines = [x.strip('\n') for x in fp.readlines()]
 
-				fp.close()
+                fp.close()
 
 
-		return check_results
-	def type(self):
-		return "config"
+        return check_results
+    def type(self):
+        return "config"
