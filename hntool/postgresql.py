@@ -77,8 +77,6 @@ class rule:
 									check_results[1].append('Server are running without ssl connections support')
 								else:
 									check_results[0].append('Server are running with ssl connections support')
-
-
                 fp.close()
                 
         if not postgresql_conf_file_found:
