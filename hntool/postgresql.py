@@ -24,7 +24,7 @@ class rule:
     def short_name(self):
         return "postgresql"
     def long_name(self):
-        return "Checks security problems on PostgreSQL config file"
+        return "Check security problems on PostgreSQL configuration files"
     def analyze(self):
         check_results = [[],[],[],[],[]]
         pgsql_conf_file = ['/var/lib/pgsql/data/pg_hba.conf', '/var/lib/pgsql/data/postgresql.conf'] 
@@ -49,24 +49,40 @@ class rule:
                             # check unix sockets authentication
                             if line_conf[0] == 'local':
                                 if 'trust' in line:
-                                    check_results[1].append('Trusted local Unix authentication are allowed')
+                                    check_results[2].append('Trusted local Unix authentication are allowed')
                                 else:
                                     check_results[0].append('Trusted local Unix authentication are not allowed')
 
                             # check tcp/ip host authentication
                             if 'host' in line_conf[0]:
                                 if 'trust' in line:
-                                    check_results[1].append('Trusted connection on ' + line_conf[3] + ' are allowed')
+                                    check_results[3].append('Trusted connection on ' + line_conf[3] + ' are allowed')
                                 else:
                                     check_results[0].append('Trusted connection on ' + line_conf[3] + ' are not allowed')
 
                 elif 'postgresql' in pgsql_conf:
-                    lines = [x.strip('\n') for x in fp.readlines()]
+                    for line in fp.readlines():
+						if len(line.strip()) > 0:
+							line_conf = shlex.split(line)
+
+							# check the default port
+							if 'port =' in line:
+								if '5432' in line:
+									check_results[1].append('Server are running on default port (5432)')
+								else:
+									check_results[0].append('Server are not running at default port (5432)')
+							# check sshl connections
+							if 'ssl =' in line:
+								if 'off' in line:
+									check_results[1].append('Server are running without ssl connections support')
+								else:
+									check_results[0].append('Server are running with ssl connections support')
+
 
                 fp.close()
                 
         if not postgresql_conf_file_found:
-            check_results[4].append('PostgreSQL conf file not found')
+            check_results[4].append('PostgreSQL configurations files are not found')
 
 
         return check_results

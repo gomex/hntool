@@ -22,9 +22,9 @@ hntool core:
     
 postgresql module:
 
-    * Check pg_hba.conf
+    * Check pg_hba.conf - ok
     * Check postgresql.conf for:
-        ** Default port
+        ** Default port - ok
         ** SSL
         ** password_encryption
         ** shared_buffers (check sysctl.conf)
