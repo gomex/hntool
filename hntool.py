@@ -19,7 +19,7 @@
 #
 #
 
-import colors
+import hntool.util
 import getopt
 import hntool
 import string
@@ -98,30 +98,32 @@ for i, k in optlist:
 
 # Method to show the check results
 def msg_status(msg, status):
+	'''
+	Method to show the check results
+	'''
 	if use_colors:
 		if status == 'ok':
-			return string.ljust(msg,70) + colors.colors.ENDC + \
-				'[ ' + colors.colors.OK + '  OK' + colors.colors.ENDC + '   ] '
+			return string.ljust(msg,70) + hntool.util.color_ok()
 		elif status == 'low':
-			return string.ljust(msg,70) + colors.colors.ENDC + \
-				'[ ' + colors.colors.LOW + ' LOW' + colors.colors.ENDC + '   ] '
+			return string.ljust(msg,70) + hntool.util.color_low()
 		elif status == 'medium':
-			return string.ljust(msg,70) + colors.colors.ENDC + \
-				'[ ' + colors.colors.MEDIUM + 'MEDIUM' + colors.colors.ENDC + ' ] '
+			return string.ljust(msg,70) + hntool.util.color_medium()
 		elif status == 'high':
-			return string.ljust(msg,70) + colors.colors.ENDC + \
-				'[  ' + colors.colors.HIGH + 'HIGH' + colors.colors.ENDC + '  ] '
+			return string.ljust(msg,70) + hntool.util.color_high()
 		elif status == 'info':
-			return string.ljust(msg,70) + colors.colors.ENDC + \
-				'[ ' + colors.colors.INFO + ' INFO' + colors.colors.ENDC + '  ] '
-
+			return string.ljust(msg,70) + hntool.util.color_info()
 
 	else:
-		if status == 'ok': 		        return string.ljust(msg,70) + '[    OK    ]'
-		elif status == 'info': 	    return string.ljust(msg,70) + '[   INFO  ]'
-		elif status == 'low':		    return string.ljust(msg,70) + '[   LOW    ]'
-		elif status == 'medium':	return string.ljust(msg,70) + '[  MEDIUM  ]'
-		elif status == 'high':	    return string.ljust(msg,70) + '[    HIGH  ]'
+		if status == 'ok':
+			return string.ljust(msg,70) + '[   OK   ]'
+		elif status == 'low':
+			return string.ljust(msg,70) + '[  LOW   ]'
+		elif status == 'medium':
+			return string.ljust(msg,70) + '[ MEDIUM ]'
+		elif status == 'high':
+			return string.ljust(msg,70) + '[  HIGH  ]'
+		elif status == 'info':
+			return string.ljust(msg,70) + '[  INFO  ]'	
 
 
 print '[ Starting hntool checks ]'

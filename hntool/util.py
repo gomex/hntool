@@ -1,5 +1,5 @@
 # 
-# hntool - A hardening tool for Linux/BSD
+# hntool - utility functions
 # Copyright (C) 2009 Hugo Doria <mail@hugodoria.org>
 # 
 #   This program is free software; you can redistribute it and/or modify
@@ -18,10 +18,17 @@
 #
 # 
 
-class colors:
-    OK = '\033[1;92m'
-    LOW = '\033[1;30m'
-    MEDIUM = '\033[1;93m'
-    HIGH = '\033[1;91m'    
-    INFO = '\033[37m'
-    ENDC = '\033[0m'
+def color_ok():
+    return '[\033[1;92m   OK   \033[0m]'
+
+def color_low():
+    return '[\033[1;30m  LOW   \033[0m]'
+
+def color_medium():
+    return '[\033[1;93m MEDIUM \033[0m]'
+
+def color_high():
+    return '[\033[1;91m  HIGH  \033[0m]'
+
+def color_info():
+    return '[ \033[37m INFO \033[0m ]'
