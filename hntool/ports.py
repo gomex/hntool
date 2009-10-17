@@ -26,32 +26,31 @@ class rule:
 		return "Checks for open ports"
 	def analyze(self):
 		check_results = [[],[],[],[],[]]
+		
+		# Checking for old files in /tmp
+		netstat_results = os.popen('LC_ALL="en_US" netstat -tulpan | grep LISTEN')
+		netstat_results = [res for res in netstat_results.readlines()]
 
-		if os.getenv('USER') == 'root':
-			# Checking for old files in /tmp
-			netstat_results = os.popen('LC_ALL="en_US" netstat -tulpan | grep LISTEN')
-			netstat_results = [res for res in netstat_results.readlines()]
+		if len(netstat_results) > 0:
+			lines = [ filter(None,netstat_results[indexc].split(' ')) \
+		                for indexc, item in enumerate(netstat_results) ]
 
-			if len(netstat_results) > 0:
-				lines = [ filter(None,netstat_results[indexc].split(' ')) \
-							for indexc, item in enumerate(netstat_results) ]
+			for indexc, item in enumerate(lines):
+				port = lines[indexc][3].split(':')[1]
+				service = lines[indexc][6].split('/')[1]
+				check_results[4].append('Service "' + service + '" using port "' + port + '" found')
+		else:
+			check_results[0].append("There's no ports opened")
 
-				for indexc, item in enumerate(lines):
-					port = lines[indexc][3].split(':')[1]
-					service = lines[indexc][6].split('/')[1]
-					check_results[4].append('Service "' + service + '" using port "' + port + '" found')
-			else:
-				check_results[0].append("There's no ports opened")
-
-			device_list = ['/dev/null', '/dev/tty', '/dev/console']
-			exec_device = False
-			for device in device_list:
-				if os.path.lexists(device):
-					if os.access(device ,os.X_OK):
-						check_results[3].append('Found device "' + device + '" with executable rights')
-						exec_device = True
-			if not exec_device:
-				check_results[1].append('Devices without executable rights')
+		device_list = ['/dev/null', '/dev/tty', '/dev/console']
+		exec_device = False
+		for device in device_list:
+			if os.path.lexists(device):
+				if os.access(device ,os.X_OK):
+					check_results[3].append('Found device "' + device + '" with executable rights')
+					exec_device = True
+		if not exec_device:
+			check_results[1].append('Devices without executable rights')
 
 		return check_results
 	def type(self):
