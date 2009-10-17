@@ -18,6 +18,31 @@
 #
 # 
 
+import os
+import sys
+
+# Functions
+
+# Show the usage help
+def usage():
+    '''Method to show the usage help'''
+    print "Usage: " + sys.argv[0] + ' [options]'
+    print "       -h, --help	: print this help"
+    print "       -l, --list	: returns list of available rules"
+    print "       -n, --nocolors	: does not use colors on output"
+    sys.exit(2)
+
+def is_root():
+    '''Method to check if hntool is running as root.'''		
+    if os.getuid() == 0:
+        return True
+
+def is_unix():
+    '''Method to check if we have power'''
+    if os.name == 'posix':
+        return True
+    return False
+
 def color_ok():
     return '[\033[1;92m   OK   \033[0m]'
 

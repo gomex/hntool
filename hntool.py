@@ -24,57 +24,34 @@ import getopt
 import hntool
 import string
 import sys
-import os
 
-
-# Functions
-def is_root():
-	'''Method to check if hntool is running as root.'''		
-	if os.getuid() == 0:
-		return True		
 
 # Return all possible modules (rules)
 def get_modules():
 	'''Method to return all modules available'''
 	return hntool.__all__
 
-def is_unix():
-	'''Method to check if we have power'''
-	if os.name == 'posix':
-		return True
-	return False
-
-# Show the usage help
-def usage():
-	'''Method to show the usage help'''
-	print "Usage: " + sys.argv[0] + ' [options]'
-	print "       -h, --help	: print this help"
-	print "       -l, --list	: returns list of available rules"
-	print "       -n, --nocolors	: does not use colors on output"
-	sys.exit(2)
-
-
 # vars
 use_colors = True # using colors by default
 hntool_version = 0.1
 
 # yes, only unix for now
-if not is_unix():
+if not hntool.util.is_unix():
 	print 'Error: You must have a Unix(-like) box. (No candy for you)'
 	sys.exit(2)
 
 # checking if we are root. we need to be. oh yeah, baby.
-if not is_root():
+if not hntool.util.is_root():
 	print 'Error: You must be root to run hntool'
 	print
-	print usage()
+	print hntool.util.usage()
 	sys.exit(2)
 
 # get our options and process them
 try:
 	optlist, args = getopt.getopt(sys.argv[1:], "lhn", ["list","help","nocolors"])
 except getopt.GetoptError:
-	usage()
+	hntool.util.usage()
 
 for i, k in optlist:
 	# Show all available modules (rules) and its description
@@ -93,7 +70,7 @@ for i, k in optlist:
 
 	# show help
 	if i in ('-h', '--help'):
-		usage()
+		hntool.util.usage()
 
 
 # Method to show the check results
