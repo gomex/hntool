@@ -34,9 +34,11 @@ class rule:
         """ Analyze Apache config file searching for harmful settings"""
         check_results = [[],[],[],[],[]]
         apache_conf_files = ['/etc/httpd/conf/httpd.conf', '/etc/apache2/conf.d/security', '/etc/apache2/apache2.conf'] 
-
+	
+	apache_conf_file_found = False
         for apache_conf in apache_conf_files:
             if os.path.isfile(apache_conf):
+		apache_conf_file_found = True
                 try:
                     fp = open(apache_conf,'r')
                 except IOError, (errno, strerror):
@@ -85,6 +87,8 @@ class rule:
 
                 # Closing the apache_config file
                 fp.close()
+	if not apache_conf_file_found:
+		check_results[4].append('Apache configurations files are not found')
 
         return check_results    
     def type(self):
