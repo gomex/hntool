@@ -16,7 +16,6 @@ hntool core:
     * Find a way to check if that module is necessary on runtime. For example,
         apache rules shouldn't run on servers that does not have apache installed.
     * Use exceptions (try/except)
-    * Write a man page
     * Write setup.py
     
     
