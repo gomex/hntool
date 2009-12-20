@@ -37,16 +37,18 @@ def get_modules():
 use_colors = True # using colors by default
 hntool_version = 0.1
 
+#TODO: define one error code for each error to allow automatic interactions.
+
 # yes, only unix for now
 if not hntool.util.is_unix():
-	print 'Error: You must have a Unix(-like) box. (No candy for you)'
+	print >> sys.stderr, 'Error: You must have a Unix(-like) box. (No candy for you)'
 	sys.exit(2)
 
 # checking if we are root. we need to be. oh yeah, baby.
 if not hntool.util.is_root():
-	print 'Error: You must be root to run hntool'
-	print
-	print hntool.util.usage()
+	print >> sys.stderr, 'Error: You must be root to run hntool'
+	print >> sys.stderr, ''
+	print >> sys.stderr, hntool.util.usage()
 	sys.exit(2)
 
 # get our options and process them
@@ -54,6 +56,9 @@ try:
 	optlist, args = getopt.getopt(sys.argv[1:], "lhn", ["list","help","nocolors"])
 except getopt.GetoptError:
 	hntool.util.usage()
+
+output_type = 'terminal'
+output_conf = { 'use_colors':True }
 
 for i, k in optlist:
 	# Show all available modules (rules) and its description
@@ -68,60 +73,28 @@ for i, k in optlist:
 
 	# do not use colors
 	if i in ('-n', '--nocolors'):
-		use_colors = False
+		output_conf['use_colors'] = False
 
 	# show help
 	if i in ('-h', '--help'):
 		hntool.util.usage()
 
+  # select the output type, like term, html, pdf,...
+	if i in ('-t','--output_type'):
+		output_type = k
 
-# Method to show the check results
-def msg_status(msg, status):
-	'''
-	Method to show the check results
-	'''
-	maxmsg_len = hntool.util.term_len() - 15
-	msg_splited = hntool.util.split_len(msg,maxmsg_len)
-	result = ""
-	i = 0
-	while i < len(msg_splited) - 1:
-		result += "   " + string.ljust(msg_splited[i], maxmsg_len) + "\n"
-		i+=1
-	result += "   " + string.ljust(msg_splited[i], maxmsg_len) + hntool.util.format_status(status,use_colors)
-	return result
-	#return string.ljust(msg,70) + hntool.util.format_status(status,use_colors)
+# status message must not go to stdout to not mess with the output format.
+print >> sys.stderr, '[ Starting hntool checks... ]'
 
-
-print '[ Starting hntool checks ]'
-
-# Run all the modules and its checks. The results of each module goes to "check_results"
+# Run all the modules and its checks.
+# The results of each module goes to "report"
+report = []
 for module in get_modules():
-	check_results = [[],[],[],[],[]] # ok, low, medium, high and info
+	module = __import__('hntool.' + module ,globals(), locals(), [hntool]).rule()
+	report.append({ 'title':module.long_name(), 'results':module.analyze() })
 
-	# Getting all results from the check and the module/check description
-	check_results = __import__('hntool.' + module ,globals(), locals(), [hntool]).rule().analyze()
-	check_description = __import__('hntool.' + module ,globals(), locals(), [hntool]).rule().long_name()
+output_format = __import__('output.' + output_type,
+                           globals(), locals(), [hntool]).format()
 
-	# Prints the module description
-	print '\n' + check_description
+output_format.output( report, output_conf )
 
-	# Print all the results, from the 5 types of messages (ok, low, medium, high and info).
-	# First message is the "ok" one (check_results[0]). The second one is
-	# "low" (check_results[1]). The third (check_results[2]) is for "warnings"
-	# and the fourth one is "high" (check_results[3]), The last one is for
-	# info messages.
-	if check_results[0] != []:
-		for j in check_results[0]:
-			print msg_status(j, 'ok')
-	if check_results[1] != []:
-		for j in check_results[1]:
-			print msg_status(j, 'low')
-	if check_results[2] != []:
-		for j in check_results[2]:
-			print msg_status(j, 'medium')
-	if check_results[3] != []:
-		for j in check_results[3]:
-			print msg_status(j, 'high')
-	if check_results[4] != []:
-		for j in check_results[4]:
-			print msg_status(j, 'info')

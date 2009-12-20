@@ -49,7 +49,7 @@ class rule:
 
                 # Checking if ServerTokens is using harmful conf
                 if not 'ServerTokens Minimal' in lines:
-                    check_results[0].append('ServerTokens is not using harmful conf')				
+                    check_results[0].append('ServerTokens is not using harmful conf')
                 else:			
                     check_results[2].append('ServerTokens is using harmful conf (set Minimal)')
 

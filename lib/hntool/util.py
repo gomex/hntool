@@ -31,6 +31,7 @@ def usage():
     print "       -h, --help	: print this help"
     print "       -l, --list	: returns list of available rules"
     print "       -n, --nocolors	: does not use colors on output"
+    print "       -t, --output_type	: select the output format"
     sys.exit(2)
 
 def is_root():
@@ -59,14 +60,3 @@ def split_len(seq, length):
             result.append(tmp)
     return result
 
-def format_status(token,use_colors=True):
-    if token == 'ok':
-        return '[\033[1;92m   OK   \033[0m]' if use_colors else '[   OK   ]'
-    elif token == 'low':
-        return '[\033[1;30m  LOW   \033[0m]' if use_colors else '[  LOW   ]'
-    elif token == 'medium':
-        return '[\033[1;93m MEDIUM \033[0m]' if use_colors else '[ MEDIUM ]'
-    elif token == 'high':
-        return '[\033[1;91m  HIGH  \033[0m]' if use_colors else '[  HIGH  ]'
-    elif token == 'info':
-        return '[ \033[37m INFO \033[0m ]' if use_colors else '[  INFO  ]'

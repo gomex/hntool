@@ -37,8 +37,12 @@ class rule:
 
 			for indexc, item in enumerate(lines):
 				port = lines[indexc][3].split(':')[1]
-				service = lines[indexc][6].split('/')[1].rstrip()
-				check_results[4].append('Service "' + service + '" using port "' + port + '" found')
+				service = lines[indexc][6].split('/')
+				if len(service) == 1: service = service[0]
+				else: service = service[1].rstrip()
+				check_results[4].append('Service "' + service + '" ' + \
+																'using port "' + port + '" found')
+
 		else:
 			check_results[0].append("There's no ports opened")
 

@@ -23,49 +23,34 @@ import hntool, string
 
 class format:
 
-  def color_ok( self ):
-      return '[\033[1;92m   OK   \033[0m]'
-
-  def color_low( self ):
-      return '[\033[1;30m  LOW   \033[0m]'
-
-  def color_medium( self ):
-      return '[\033[1;93m MEDIUM \033[0m]'
-
-  def color_high( self ):
-      return '[\033[1;91m  HIGH  \033[0m]'
-
-  def color_info( self ):
-      return '[ \033[37m INFO \033[0m ]'
+  def format_status( self, token ):
+      use_colors = self.conf['use_colors']
+      if token == 'ok':
+          return '[\033[1;92m   OK   \033[0m]' if use_colors else '[   OK   ]'
+      elif token == 'low':
+          return '[\033[1;30m  LOW   \033[0m]' if use_colors else '[  LOW   ]'
+      elif token == 'medium':
+          return '[\033[1;93m MEDIUM \033[0m]' if use_colors else '[ MEDIUM ]'
+      elif token == 'high':
+          return '[\033[1;91m  HIGH  \033[0m]' if use_colors else '[  HIGH  ]'
+      elif token == 'info':
+          return '[ \033[37m INFO \033[0m ]'   if use_colors else '[  INFO  ]'
 
   # Method to show the check results
   def msg_status( self, msg, status ):
     '''
     Method to show the check results
     '''
-    if self.conf['use_colors']:
-      if status == 'ok':
-        return string.ljust( msg, 70 ) + hntool.util.color_ok( )
-      elif status == 'low':
-        return string.ljust( msg, 70 ) + hntool.util.color_low( )
-      elif status == 'medium':
-        return string.ljust( msg, 70 ) + hntool.util.color_medium( )
-      elif status == 'high':
-        return string.ljust( msg, 70 ) + hntool.util.color_high( )
-      elif status == 'info':
-        return string.ljust( msg, 70 ) + hntool.util.color_info( )
-
-    else:
-      if status == 'ok':
-        return string.ljust( msg, 70 ) + '[   OK   ]'
-      elif status == 'low':
-        return string.ljust( msg, 70 ) + '[  LOW   ]'
-      elif status == 'medium':
-        return string.ljust( msg, 70 ) + '[ MEDIUM ]'
-      elif status == 'high':
-        return string.ljust( msg, 70 ) + '[  HIGH  ]'
-      elif status == 'info':
-        return string.ljust( msg, 70 ) + '[  INFO  ]'  
+    maxmsg_len = hntool.util.term_len() - 15
+    msg_splited = hntool.util.split_len( msg, maxmsg_len )
+    result = ""
+    i = 0
+    while i < len(msg_splited) - 1:
+      result += "   " + string.ljust( msg_splited[i], maxmsg_len ) + "\n"
+      i += 1
+    return result + "   " + \
+           string.ljust( msg_splited[i], maxmsg_len ) + \
+           self.format_status( status )
 
   def output( self, report, conf ):
     self.conf = conf
@@ -78,17 +63,17 @@ class format:
       print '\n' + m['title']
       if m['results'][0] != []:
         for result in m['results'][0]:
-          print '   ' + self.msg_status( result, 'ok' )
+          print self.msg_status( result, 'ok' )
       if m['results'][1] != []:
         for result in m['results'][1]:
-          print '   ' + self.msg_status( result, 'low' )
+          print self.msg_status( result, 'low' )
       if m['results'][2] != []:
         for result in m['results'][2]:
-          print '   ' + self.msg_status( result, 'medium' )
+          print self.msg_status( result, 'medium' )
       if m['results'][3] != []:
         for result in m['results'][3]:
-          print '   ' + self.msg_status( result, 'high' )
+          print self.msg_status( result, 'high' )
       if m['results'][4] != []:
         for result in m['results'][4]:
-          print '   ' + self.msg_status( result, 'info' )
+          print self.msg_status( result, 'info' )
 
