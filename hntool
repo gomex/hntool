@@ -19,11 +19,13 @@
 #
 #
 
+import sys, os
+sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/lib")
+
 import hntool.util
 import getopt
 import hntool
 import string
-import sys
 
 
 # Return all possible modules (rules)
