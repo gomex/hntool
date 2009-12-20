@@ -33,3 +33,6 @@ postgresql module:
         ** effective_cache_size
         ** o autovacuum
 
+DONE
+
+    * Write a man page - Rafael Gomes <rafael.gomes@techfree.com.br>
