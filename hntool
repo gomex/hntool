@@ -53,7 +53,10 @@ if not hntool.util.is_root():
 
 # get our options and process them
 try:
-	optlist, args = getopt.getopt(sys.argv[1:], "lhn", ["list","help","nocolors"])
+	optlist, args = getopt.getopt(sys.argv[1:], "lhnt:",
+	                              ["list","help","nocolors","output_type="])
+
+
 except getopt.GetoptError:
 	hntool.util.usage()
 
