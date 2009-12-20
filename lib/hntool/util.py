@@ -20,6 +20,7 @@
 
 import os
 import sys
+import re
 
 # Functions
 
@@ -47,7 +48,16 @@ def term_len():
     return int(os.popen('stty size', 'r').read().split()[1])
 
 def split_len(seq, length):
-    return [seq[i:i+length] for i in range(0, len(seq), length)]
+    result = []
+    p = re.compile("(.{,"+str(length)+"})\s")
+    while len(seq) > 0:
+        if len(seq) < length:
+            result.append(seq)
+            break
+        else:
+            tmp,seq = (p.split(seq,1))[1:]
+            result.append(tmp)
+    return result
 
 def format_status(token,use_colors=True):
     if token == 'ok':
