@@ -80,29 +80,16 @@ def msg_status(msg, status):
 	'''
 	Method to show the check results
 	'''
-	if use_colors:
-		if status == 'ok':
-			return string.ljust(msg,70) + hntool.util.color_ok()
-		elif status == 'low':
-			return string.ljust(msg,70) + hntool.util.color_low()
-		elif status == 'medium':
-			return string.ljust(msg,70) + hntool.util.color_medium()
-		elif status == 'high':
-			return string.ljust(msg,70) + hntool.util.color_high()
-		elif status == 'info':
-			return string.ljust(msg,70) + hntool.util.color_info()
-
-	else:
-		if status == 'ok':
-			return string.ljust(msg,70) + '[   OK   ]'
-		elif status == 'low':
-			return string.ljust(msg,70) + '[  LOW   ]'
-		elif status == 'medium':
-			return string.ljust(msg,70) + '[ MEDIUM ]'
-		elif status == 'high':
-			return string.ljust(msg,70) + '[  HIGH  ]'
-		elif status == 'info':
-			return string.ljust(msg,70) + '[  INFO  ]'	
+	maxmsg_len = hntool.util.term_len() - 15
+	msg_splited = hntool.util.split_len(msg,maxmsg_len)
+	result = ""
+	i = 0
+	while i < len(msg_splited) - 1:
+		result += "   " + string.ljust(msg_splited[i], maxmsg_len) + "\n"
+		i+=1
+	result += "   " + string.ljust(msg_splited[i], maxmsg_len) + hntool.util.format_status(status,use_colors)
+	return result
+	#return string.ljust(msg,70) + hntool.util.format_status(status,use_colors)
 
 
 print '[ Starting hntool checks ]'
@@ -125,16 +112,16 @@ for module in get_modules():
 	# info messages.
 	if check_results[0] != []:
 		for j in check_results[0]:
-			print '   ' + msg_status(j, 'ok')
+			print msg_status(j, 'ok')
 	if check_results[1] != []:
 		for j in check_results[1]:
-			print '   ' + msg_status(j, 'low')
+			print msg_status(j, 'low')
 	if check_results[2] != []:
 		for j in check_results[2]:
-			print '   ' + msg_status(j, 'medium')
+			print msg_status(j, 'medium')
 	if check_results[3] != []:
 		for j in check_results[3]:
-			print '   ' + msg_status(j, 'high')
+			print msg_status(j, 'high')
 	if check_results[4] != []:
 		for j in check_results[4]:
-			print '   ' + msg_status(j, 'info')
+			print msg_status(j, 'info')

@@ -17,6 +17,8 @@ hntool core:
         apache rules shouldn't run on servers that does not have apache installed.
     * Use exceptions (try/except)
     * Write setup.py
+    * lib/hntool/util.py
+        ** split_len(): don't split a word in the middle
     
     
 postgresql module:

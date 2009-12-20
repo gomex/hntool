@@ -43,17 +43,20 @@ def is_unix():
         return True
     return False
 
-def color_ok():
-    return '[\033[1;92m   OK   \033[0m]'
+def term_len():
+    return int(os.popen('stty size', 'r').read().split()[1])
 
-def color_low():
-    return '[\033[1;30m  LOW   \033[0m]'
+def split_len(seq, length):
+    return [seq[i:i+length] for i in range(0, len(seq), length)]
 
-def color_medium():
-    return '[\033[1;93m MEDIUM \033[0m]'
-
-def color_high():
-    return '[\033[1;91m  HIGH  \033[0m]'
-
-def color_info():
-    return '[ \033[37m INFO \033[0m ]'
+def format_status(token,use_colors=True):
+    if token == 'ok':
+        return '[\033[1;92m   OK   \033[0m]' if use_colors else '[   OK   ]'
+    elif token == 'low':
+        return '[\033[1;30m  LOW   \033[0m]' if use_colors else '[  LOW   ]'
+    elif token == 'medium':
+        return '[\033[1;93m MEDIUM \033[0m]' if use_colors else '[ MEDIUM ]'
+    elif token == 'high':
+        return '[\033[1;91m  HIGH  \033[0m]' if use_colors else '[  HIGH  ]'
+    elif token == 'info':
+        return '[ \033[37m INFO \033[0m ]' if use_colors else '[  INFO  ]'
