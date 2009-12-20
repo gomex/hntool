@@ -74,6 +74,44 @@ class rule:
                                 check_results[0].append('LimitRequestBody is not using harmful value (0)')
                             else:
                                 check_results[2].append('LimitRequestBody is using harmful value (0)')
+		else:
+			check_results[0].append('LimitRequestBody is not using harmful value (0)')
+
+		# Checking if LimitRequestFields is bigger than 0		
+                if 'LimitRequestFields' in lines:			
+                    for line in lines: 
+                        if line.startswith('LimitRequestFields') is True:
+                            piece = line.split(' ')
+                            if int(piece[1]) == 0:
+                                check_results[0].append('LimitRequestFields is not using harmful value (0)')
+                            else:
+                                check_results[2].append('LimitRequestFields is using harmful value (0)')
+		else:
+			check_results[0].append('LimitRequestFields is not using harmful value (0)')
+
+		# Checking if LimitRequestFieldsize is equal 8190		
+                if 'LimitRequestFieldsize' in lines:			
+                    for line in lines: 
+                        if line.startswith('LimitRequestFieldsize') is True:
+                            piece = line.split(' ')
+                            if int(piece[1]) == 0:
+                                check_results[0].append('LimitRequestFieldsize is using good value (8190)')
+                            else:
+                                check_results[1].append('LimitRequestFieldsize is not using good value (8190)')
+		else:
+			check_results[0].append('LimitRequestFieldsize is using good value (8190)')
+
+		# Checking if LimitRequestLine is equal 8190		
+                if 'LimitRequestLine' in lines:			
+                    for line in lines: 
+                        if line.startswith('LimitRequestLine') is True:
+                            piece = line.split(' ')
+                            if int(piece[1]) == 0:
+                                check_results[0].append('LimitRequestLine is using good value (8190)')
+                            else:
+                                check_results[1].append('LimitRequestLine is not using good value (8190)')
+		else:
+			check_results[0].append('LimitRequestLine is using good value (8190)')
 
                 # Checking Timeout less than 300
                 tvalue = 300			
