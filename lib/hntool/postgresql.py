@@ -25,7 +25,9 @@ class rule:
         return "postgresql"
     def long_name(self):
         return "Check security problems on PostgreSQL configuration files"
-    def analyze(self):
+    def __init__(self, options):
+        pass
+    def analyze(self, options):
         check_results = [[],[],[],[],[]]
         pgsql_conf_file = ['/var/lib/pgsql/data/pg_hba.conf', '/var/lib/pgsql/data/postgresql.conf'] 
         

@@ -24,7 +24,9 @@ class rule:
 		return "remote access"
 	def long_name(self):
 		return "Checks for services with remote access allowed"
-	def analyze(self):
+	def __init__(self, options):
+		pass
+	def analyze(self, options):
 		check_results = [[],[],[],[],[]]
 		hosts_allow_file = '/etc/hosts.allow'
 		hosts_deny_file  = '/etc/hosts.deny'

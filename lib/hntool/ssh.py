@@ -24,7 +24,9 @@ class rule:
 		return "ssh"
 	def long_name(self):
 		return "Checks security problems on sshd config file"
-	def analyze(self):
+	def __init__(self, options):
+		pass
+	def analyze(self, options):
 		check_results = [[],[],[],[],[]]
 		ssh_conf_file = ['/etc/ssh/sshd_config', '/etc/sshd_config', '/etc/ssh/ssh_config'] 
 

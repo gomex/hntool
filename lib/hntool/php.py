@@ -28,8 +28,11 @@ class rule:
     def long_name(self):
         """ Returns a module description used on report """
         return "Checks security problems on php config file"
-    
-    def analyze(self):
+
+    def __init__(self, options):
+        pass
+
+    def analyze(self, options):
         """ Analyze PHP config file searching for harmful settings"""
         check_results = [[],[],[],[],[]]
         conf_files = ['/etc/php5/apache2/php.ini', '/etc/php5/cli/php.ini', '/etc/php.ini'] 

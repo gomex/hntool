@@ -24,7 +24,9 @@ class rule:
 		return "filesystems"
 	def long_name(self):
 		return "Checks filesystems for security problems"
-	def analyze(self):
+	def __init__(self, options):
+		pass
+	def analyze(self, options):
 		check_results = [[],[],[],[],[]]
 		locate_database = '/var/lib/mlocate/mlocate.db'
 

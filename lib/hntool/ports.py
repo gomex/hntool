@@ -24,7 +24,9 @@ class rule:
 		return "port checks"
 	def long_name(self):
 		return "Checks for open ports"
-	def analyze(self):
+	def __init__(self, options):
+		pass
+	def analyze(self, options):
 		check_results = [[],[],[],[],[]]
 		
 		# Checking for old files in /tmp

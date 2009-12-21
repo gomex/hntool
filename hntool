@@ -1,7 +1,10 @@
 #! /usr/bin/env python
 #
 # hntool - A hardening tool for Linux/BSD
-# Copyright (C) 2009 Hugo Doria <mail@hugodoria.org>
+# Copyright (C) 2009 Authors
+# Authors:
+#   * Hugo Doria <mail@hugodoria.org>
+#   * Aurelio A. Heckert <aurium ( a ) gmail dot com>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -22,20 +25,60 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/lib")
 
+from optparse import OptionParser, OptionGroup
 import hntool.util
-import getopt
 import hntool
+import output
 import string
 
+HNTOOL_VERSION=0.2
 
-# Return all possible modules (rules)
-def get_modules():
-	'''Method to return all modules available'''
-	return hntool.__all__
+opt_parser = OptionParser(
+    usage="Usage: %prog [options]",
+    version="%prog "+ str(HNTOOL_VERSION)
+  )
+output_options = OptionGroup(opt_parser, "Output Options")
+rule_options = OptionGroup(opt_parser, "Rule Options")
 
-# vars
-use_colors = True # using colors by default
-hntool_version = 0.1
+rule_modules = {}
+for module in hntool.__all__:
+    rule_modules[module] = \
+       __import__('hntool.' + module, globals(), locals(), [hntool]).rule(output_options)
+
+def list_rules(*args):
+		print '-'*31 + ' hntool rule list ' + '-'*31
+		for module in get_modules():
+			print string.ljust(module, 16) + ': ' + __import__('hntool.' + \
+					module, globals(), locals(), [hntool]).rule().long_name()
+		sys.exit(0)
+
+output_modules = {}
+for module in output.__formats__:
+    output_modules[module] = \
+       __import__('output.' + module, globals(), locals(), [hntool]).format(output_options)
+
+def list_output_formats(*args):
+    print '-'*30 + ' hntool output list ' + '-'*30
+    for module in output_modules:
+         print string.ljust( module, 11 ) + ': ' + output_modules[module].description
+    sys.exit(0)
+
+opt_parser.add_option("-l", "--list",
+                      action="callback",
+                      callback=list_rules,
+                      help="returns a list of available rules")
+opt_parser.add_option("-t", "--output_type",
+                      action="store",
+                      dest="output_format", default="terminal",
+                      help="select the output format")
+opt_parser.add_option("--list_output_type",
+                      action="callback",
+                      callback=list_output_formats,
+                      help="list the avaliable output formats")
+opt_parser.add_option_group(output_options)
+opt_parser.add_option_group(rule_options)
+
+options, args = opt_parser.parse_args( sys.argv[1:] )
 
 #TODO: define one error code for each error to allow automatic interactions.
 
@@ -48,43 +91,9 @@ if not hntool.util.is_unix():
 if not hntool.util.is_root():
 	print >> sys.stderr, 'Error: You must be root to run hntool'
 	print >> sys.stderr, ''
-	print >> sys.stderr, hntool.util.usage()
+	print >> sys.stderr, opt_parser.print_help()
 	sys.exit(2)
 
-# get our options and process them
-try:
-	optlist, args = getopt.getopt(sys.argv[1:], "lhnt:",
-	                              ["list","help","nocolors","output_type="])
-
-
-except getopt.GetoptError:
-	hntool.util.usage()
-
-output_type = 'terminal'
-output_conf = { 'use_colors':True }
-
-for i, k in optlist:
-	# Show all available modules (rules) and its description
-	if i in ('-l','--list'):
-		print "-"*20 + " hntool rule list " + "-"*20
-
-		for module in get_modules():
-			print string.ljust(module, 20) + ": " + __import__('hntool.' + \
-					module, globals(), locals(), [hntool]).rule().long_name()
-
-		sys.exit(2)
-
-	# do not use colors
-	if i in ('-n', '--nocolors'):
-		output_conf['use_colors'] = False
-
-	# show help
-	if i in ('-h', '--help'):
-		hntool.util.usage()
-
-  # select the output type, like term, html, pdf,...
-	if i in ('-t','--output_type'):
-		output_type = k
 
 # status message must not go to stdout to not mess with the output format.
 print >> sys.stderr, '[ Starting hntool checks... ]'
@@ -92,12 +101,10 @@ print >> sys.stderr, '[ Starting hntool checks... ]'
 # Run all the modules and its checks.
 # The results of each module goes to "report"
 report = []
-for module in get_modules():
-	module = __import__('hntool.' + module ,globals(), locals(), [hntool]).rule()
-	report.append({ 'title':module.long_name(), 'results':module.analyze() })
+for m in rule_modules:
+	report.append({ 'title':rule_modules[m].long_name(),
+	                'results':rule_modules[m].analyze(options) })
 
-output_format = __import__('output.' + output_type,
-                           globals(), locals(), [hntool]).format()
-
-output_format.output( report, output_conf )
+# Give the report to the user
+output_modules[ options.output_format ].output( report, options )
 

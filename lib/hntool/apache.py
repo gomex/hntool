@@ -30,10 +30,19 @@ class rule:
         """ Returns a module description used on report """
         return "Checks security problems on Apache config file"
 
-    def analyze(self):
+    def __init__(self, options):
+        options.add_option("--apache_conf",
+                           action="append",
+                           dest="apache_conf",
+                           help="adds a apache configuration file to the list of files to analize")
+
+    def analyze(self, options):
         """ Analyze Apache config file searching for harmful settings"""
         check_results = [[],[],[],[],[]]
         apache_conf_files = ['/etc/httpd/conf/httpd.conf', '/etc/apache2/conf.d/security', '/etc/apache2/apache2.conf'] 
+        if options.apache_conf:
+            for f in options.apache_conf:
+                apache_conf_files.append(f)
 	
 	apache_conf_file_found = False
         for apache_conf in apache_conf_files:

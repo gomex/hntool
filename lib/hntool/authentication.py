@@ -21,11 +21,17 @@ import os
 import stat
 
 class rule:
+
 	def short_name(self):
 		return "authentication"
+
 	def long_name(self):
 		return "Checks users, groups and authentications"
-	def analyze(self):
+
+	def __init__(self, options):
+		pass
+
+	def analyze(self, options):
 		check_results = [[],[],[],[],[]]
 		passwd_file = '/etc/passwd'		
 		logindefs_file = '/etc/login.defs'
@@ -104,5 +110,6 @@ class rule:
 			inittab_fp.close()
 
 		return check_results
+
 	def type(self):
 		return "config"

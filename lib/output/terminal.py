@@ -1,6 +1,6 @@
 # 
 # hntool - output module - treminal
-# Copyright ( C ) 2009 Authors
+# Copyright (C) 2009 Authors
 # Authors:
 #   * Hugo Doria <mail@hugodoria.org>
 #   * Aurelio A. Heckert <aurium ( a ) gmail dot com>
@@ -23,8 +23,16 @@ import hntool, string
 
 class format:
 
+  description = "Human friendly output for terminal"
+
+  def __init__(self, options):
+      options.add_option("-n", "--term_nocolors",
+                         action="store_false",
+                         dest="term_use_colors", default=True,
+                         help="does not use colors on terminal output")
+
   def format_status( self, token ):
-      use_colors = self.conf['use_colors']
+      use_colors = self.conf.term_use_colors
       if token == 'ok':
           return '[\033[1;92m   OK   \033[0m]' if use_colors else '[   OK   ]'
       elif token == 'low':
