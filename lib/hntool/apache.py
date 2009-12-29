@@ -42,7 +42,8 @@ class rule:
         apache_conf_files = ['/etc/httpd/conf/httpd.conf', '/etc/apache2/conf.d/security', '/etc/apache2/apache2.conf'] 
         if options.apache_conf:
             for f in options.apache_conf:
-                apache_conf_files.append(f)
+		if not f in options.apache_conf:		
+	                apache_conf_files.append(f)
 	
 	apache_conf_file_found = False
         for apache_conf in apache_conf_files:
