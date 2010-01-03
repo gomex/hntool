@@ -20,6 +20,8 @@
 # To do : Include code to check when sintax that there isn't in conf
 
 import os
+import commands
+import stat
 
 class rule:
     def short_name(self):
@@ -131,7 +133,23 @@ class rule:
                         if int(piece[1]) <= tvalue:
                             check_results[0].append('Timeout is not using harmful value (>=%s)' % (tvalue))
                         else:
-                            check_results[2].append('Timeout is using harmful value (>=%s)' % (tvalue))		   
+                            check_results[2].append('Timeout is using harmful value (>=%s)' % (tvalue))
+
+		## Updating database
+		commands.getoutput('updatedb')
+
+		# Checking .htpasswd files permission
+		mode = "550"
+		mode = int(mode, 8)
+		locate_status,locate_returns = commands.getstatusoutput('locate .htpasswd')
+		if locate_status == 0:
+			for locate_return in locate_returns.split('\n'):
+				if stat.S_IMODE(os.stat(locate_return).st_mode) == mode:
+					check_results[0].append('The file %s is not using harmful permission (550)' % (locate_return))
+				else:
+					check_results[2].append('The file %s is using harmful permission (550)' % (locate_return))	
+		else:
+			check_results[0].append('.htpasswd files are not found')		   
 
                 # Closing the apache_config file
                 fp.close()
