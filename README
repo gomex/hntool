@@ -27,11 +27,7 @@ HOW TO USE
 
 Run hntool with:
 
-$ python hntool.py
-
-or
-
-# ./hntool.py
+# ./hntool
 
 You can also see the hntool(1) manual by typing man hntool at the command line 
 or see the usage help:
