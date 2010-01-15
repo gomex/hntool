@@ -34,15 +34,20 @@ class format:
   def format_status( self, token ):
       use_colors = self.conf.term_use_colors
       if token == 'ok':
-          return '[\033[1;92m   OK   \033[0m]' if use_colors else '[   OK   ]'
+          if use_colors : return '[\033[1;92m   OK   \033[0m]' 
+          else          : return '[   OK   ]'
       elif token == 'low':
-          return '[\033[1;30m  LOW   \033[0m]' if use_colors else '[  LOW   ]'
+          if use_colors : return '[\033[1;30m  LOW   \033[0m]'
+          else          : return '[  LOW   ]'
       elif token == 'medium':
-          return '[\033[1;93m MEDIUM \033[0m]' if use_colors else '[ MEDIUM ]'
+          if use_colors : return '[\033[1;93m MEDIUM \033[0m]' 
+          else          : return '[ MEDIUM ]'
       elif token == 'high':
-          return '[\033[1;91m  HIGH  \033[0m]' if use_colors else '[  HIGH  ]'
+          if use_colors : return '[\033[1;91m  HIGH  \033[0m]' 
+          else          : return '[  HIGH  ]'
       elif token == 'info':
-          return '[ \033[37m INFO \033[0m ]'   if use_colors else '[  INFO  ]'
+          if use_colors : return '[ \033[37m INFO \033[0m ]'
+          else          : return '[  INFO  ]'
 
   # Method to show the check results
   def msg_status( self, msg, status ):
