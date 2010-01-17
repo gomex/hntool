@@ -58,7 +58,7 @@ class rule:
 						users_with_uid_zero = True
 
 					# Checking if there's a user (other than root) with a valid shell
-					if user[0] != 'root' and user[6] not in ['/sbin/nologin', '/bin/false', '/usr/bin/false']:
+					if user[0] != 'root' and user[6] not in ['/sbin/nologin', '/bin/false', '/usr/bin/false', '/usr/sbin/false']:
 						check_results[2].append('User "' + user[0] + '" may have a harmful shell (' + user[6] + ')')
 						
 				if not users_with_uid_zero:
