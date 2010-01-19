@@ -44,13 +44,13 @@ class rule:
         apache_conf_files = ['/etc/httpd/conf/httpd.conf', '/etc/apache2/conf.d/security', '/etc/apache2/apache2.conf'] 
         if options.apache_conf:
             for f in options.apache_conf:
-		if not f in options.apache_conf:		
-	                apache_conf_files.append(f)
-	
-	apache_conf_file_found = False
+                if not f in options.apache_conf:        
+                    apache_conf_files.append(f)
+    
+        apache_conf_file_found = False
         for apache_conf in apache_conf_files:
             if os.path.isfile(apache_conf):
-		apache_conf_file_found = True
+                apache_conf_file_found = True
                 try:
                     fp = open(apache_conf,'r')
                 except IOError, (errno, strerror):
@@ -62,23 +62,23 @@ class rule:
                 # Checking if ServerTokens is using harmful conf
                 if not 'ServerTokens Minimal' in lines:
                     check_results[0].append('ServerTokens is not using harmful conf')
-                else:			
+                else:            
                     check_results[2].append('ServerTokens is using harmful conf (set Minimal)')
 
-                # Checking if KeepAlive is set to On			
-                if 'KeepAlive On' in lines:			
+                # Checking if KeepAlive is set to On            
+                if 'KeepAlive On' in lines:            
                     check_results[0].append('KeepAlive is not using harmful conf')
                 else:
                     check_results[2].append('KeepAlive is using harmful conf (set On)')
 
-                # Checking if KeepAlive is set to On			
-                if 'ServerSignature Off' in lines:			
+                # Checking if KeepAlive is set to On            
+                if 'ServerSignature Off' in lines:            
                     check_results[0].append('ServerSignature is not using harmful conf')
                 else:
                     check_results[2].append('ServerSignature is using harmful conf (set Off)')
 
-                # Checking if LimitRequestBody is bigger than 0		
-                if 'LimitRequestBody' in lines:			
+                # Checking if LimitRequestBody is bigger than 0        
+                if 'LimitRequestBody' in lines:            
                     for line in lines: 
                         if line.startswith('LimitRequestBody') is True:
                             piece = line.split(' ')
@@ -86,11 +86,11 @@ class rule:
                                 check_results[0].append('LimitRequestBody is not using harmful value (0)')
                             else:
                                 check_results[2].append('LimitRequestBody is using harmful value (0)')
-		else:
-			check_results[0].append('LimitRequestBody is not using harmful value (0)')
+                else:
+                    check_results[0].append('LimitRequestBody is not using harmful value (0)')
 
-		# Checking if LimitRequestFields is bigger than 0		
-                if 'LimitRequestFields' in lines:			
+        # Checking if LimitRequestFields is bigger than 0        
+                if 'LimitRequestFields' in lines:            
                     for line in lines: 
                         if line.startswith('LimitRequestFields') is True:
                             piece = line.split(' ')
@@ -98,11 +98,11 @@ class rule:
                                 check_results[0].append('LimitRequestFields is not using harmful value (0)')
                             else:
                                 check_results[2].append('LimitRequestFields is using harmful value (0)')
-		else:
-			check_results[0].append('LimitRequestFields is not using harmful value (0)')
+                else:
+                    check_results[0].append('LimitRequestFields is not using harmful value (0)')
 
-		# Checking if LimitRequestFieldsize is equal 8190		
-                if 'LimitRequestFieldsize' in lines:			
+        # Checking if LimitRequestFieldsize is equal 8190        
+                if 'LimitRequestFieldsize' in lines:            
                     for line in lines: 
                         if line.startswith('LimitRequestFieldsize') is True:
                             piece = line.split(' ')
@@ -110,11 +110,11 @@ class rule:
                                 check_results[0].append('LimitRequestFieldsize is using good value (8190)')
                             else:
                                 check_results[1].append('LimitRequestFieldsize is not using good value (8190)')
-		else:
-			check_results[0].append('LimitRequestFieldsize is using good value (8190)')
+                else:
+                    check_results[0].append('LimitRequestFieldsize is using good value (8190)')
 
-		# Checking if LimitRequestLine is equal 8190		
-                if 'LimitRequestLine' in lines:			
+        # Checking if LimitRequestLine is equal 8190        
+                if 'LimitRequestLine' in lines:            
                     for line in lines: 
                         if line.startswith('LimitRequestLine') is True:
                             piece = line.split(' ')
@@ -122,11 +122,11 @@ class rule:
                                 check_results[0].append('LimitRequestLine is using good value (8190)')
                             else:
                                 check_results[1].append('LimitRequestLine is not using good value (8190)')
-		else:
-			check_results[0].append('LimitRequestLine is using good value (8190)')
+                else:
+                    check_results[0].append('LimitRequestLine is using good value (8190)')
 
                 # Checking Timeout less than 300
-                tvalue = 300			
+                tvalue = 300            
                 for line in lines: 
                     if line.startswith('Timeout') is True:
                         piece = line.split(' ')
@@ -135,26 +135,25 @@ class rule:
                         else:
                             check_results[2].append('Timeout is using harmful value (>=%s)' % (tvalue))
 
-		## Updating database
-		commands.getoutput('updatedb')
+        ## Updating database
+        commands.getoutput('updatedb')
 
-		# Checking .htpasswd files permission
-		mode = "550"
-		mode = int(mode, 8)
-		locate_status,locate_returns = commands.getstatusoutput('locate .htpasswd')
-		if locate_status == 0:
-			for locate_return in locate_returns.split('\n'):
-				if stat.S_IMODE(os.stat(locate_return).st_mode) == mode:
-					check_results[0].append('The file %s is not using harmful permission (550)' % (locate_return))
-				else:
-					check_results[2].append('The file %s is using harmful permission (550)' % (locate_return))	
-		else:
-			check_results[0].append('.htpasswd files are not found')		   
-
-                # Closing the apache_config file
-                fp.close()
-	if not apache_conf_file_found:
-		check_results[4].append('Apache configurations files are not found')
+        # Checking .htpasswd files permission
+        mode = "550"
+        mode = int(mode, 8)
+        locate_status,locate_returns = commands.getstatusoutput('locate .htpasswd')
+        if locate_status == 0:
+            for locate_return in locate_returns.split('\n'):
+                if stat.S_IMODE(os.stat(locate_return).st_mode) == mode:
+                    check_results[0].append('The file %s is not using harmful permission (550)' % (locate_return))
+                else:
+                    check_results[2].append('The file %s is using harmful permission (550)' % (locate_return))    
+        else:
+            check_results[0].append('.htpasswd files are not found')           
+        # Closing the apache_config file
+        fp.close()
+        if not apache_conf_file_found:
+            check_results[4].append('Apache configurations files are not found')
 
         return check_results    
     def type(self):
